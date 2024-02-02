@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/plans")
 public class PlanController {
 
+    private final PlanRepository planRepository;
+
+    private PlanController(PlanRepository planRepository){
+        this.planRepository=planRepository;
+    }
+
     @GetMapping("/{requestedId}")
     private ResponseEntity<Plan> findById(@PathVariable Long requestedId){
         if (requestedId.equals(99L)){ 
