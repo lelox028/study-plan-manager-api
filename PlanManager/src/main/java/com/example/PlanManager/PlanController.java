@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/plans")
 public class PlanController {
 
-    @GetMapping("/{requestedID}")
-    private ResponseEntity<Plan> findById(){
-        Plan plan = new Plan(99L, "First Plan");
-        return ResponseEntity.ok(plan);
+    @GetMapping("/{requestedId}")
+    private ResponseEntity<Plan> findById(@PathVariable Long requestedId){
+        if (requestedId.equals(99L)){ 
+            Plan plan = new Plan(99L, "First Plan");
+            return ResponseEntity.ok(plan);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 }
