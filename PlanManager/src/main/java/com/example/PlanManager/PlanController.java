@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlanController {
 
     @GetMapping("/{requestedID}")
-    private ResponseEntity<String> findById(){
-        return ResponseEntity.ok("{}");
+    private ResponseEntity<Plan> findById(){
+        Plan plan = new Plan(99L, "First Plan");
+        return ResponseEntity.ok(plan);
     }
 }

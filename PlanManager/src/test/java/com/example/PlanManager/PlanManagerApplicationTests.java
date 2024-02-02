@@ -1,6 +1,5 @@
 package com.example.PlanManager;
 
-
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -14,13 +13,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PlanManagerApplicationTests {
-    @Autowired
-    TestRestTemplate restTemplate;
+	@Autowired
+	TestRestTemplate restTemplate;
 
-    @Test
-    void shouldReturnAPlanWhenDataIsSaved() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/plans/99", String.class);
+	@Test
+	void shouldReturnAPlanWhenDataIsSaved() {
+		ResponseEntity<String> response = restTemplate.getForEntity("/plans/99", String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		Number id = documentContext.read("$.id");
+		assertThat(id).isEqualTo(99);
+
+		String name = documentContext.read("$.name");
+		assertThat(name).isEqualTo("First Plan");
+	}
 }
