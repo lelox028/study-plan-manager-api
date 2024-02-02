@@ -1,0 +1,1 @@
+INSERT INTO PLAN(ID, NAME) VALUES (99, 'First Plan');

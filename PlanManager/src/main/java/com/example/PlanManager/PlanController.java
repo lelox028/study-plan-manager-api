@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/plans")
@@ -17,11 +18,11 @@ public class PlanController {
     }
 
     @GetMapping("/{requestedId}")
-    private ResponseEntity<Plan> findById(@PathVariable Long requestedId){
-        if (requestedId.equals(99L)){ 
-            Plan plan = new Plan(99L, "First Plan");
-            return ResponseEntity.ok(plan);
-        }else{
+    private ResponseEntity<Plan> findById(@PathVariable Long requestedId) {
+        Optional<Plan> planOptional = planRepository.findById(requestedId);
+        if (planOptional.isPresent()) {
+            return ResponseEntity.ok(planOptional.get());
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
