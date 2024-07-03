@@ -33,9 +33,9 @@
 
   ## Características Clave:
 
-  - **Gestión de Asignaturas:** Almacenar y recuperar información detallada de cada asignatura, incluyendo calificaciones, dependencias, estado actual, y más.
+  - **Gestión de Asignaturas:** Almacenar y recuperar información detallada de cada asignatura, incluyendo calificaciones, correlatividades, estado actual, y más.
   - **Administración de Planes:** Organizar, filtrar y ordenar múltiples planes de estudio y sus asignaturas, simplificando la planificación académica.
-  - **Interacción Avanzada:** Ofrecer diversas vistas y utilidades como asignaturas actualmente inscribibles, asignaturas bloqueadas/desbloqueadas, promedios, y más.
+  - **Interacción Avanzada:** Ofrece diversas vistas y utilidades como asignaturas actualmente cursables, asignaturas bloqueadas/desbloqueadas, promedios, y más.
 
   ## Características Futuras (Próximamente):
 
