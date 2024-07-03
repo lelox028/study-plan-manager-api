@@ -22,6 +22,10 @@
 
   - Developed using Spring Boot for Java.
 
+  ## Design and Development Process:
+
+  The design and development process will be documented. You can find the relevant documentation [here](#https://github.com/lelox028/study-plan-manager-api/tree/main/Documentation/EN%20%F0%9F%87%AC%F0%9F%87%A7).
+
 </details>
 
 <details>
@@ -46,5 +50,8 @@
 
   - Desarrollado utilizando Spring Boot para Java.
 
-</details>
+  ## Proceso de Diseño y Desarrollo:
 
+  El proceso de diseño y desarrollo será documentado. Puedes encontrar la documentación relevante [aquí](#https://github.com/lelox028/study-plan-manager-api/tree/main/Documentation/ES%20%F0%9F%87%AA%F0%9F%87%B8).
+
+</details>
