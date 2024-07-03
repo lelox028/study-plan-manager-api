@@ -1,20 +1,50 @@
-# Repository Description
+## Study Plan Manager API
 
-API for Study Plan Manager.
+<details>
+  <summary>English :gb:</summary>
 
-Welcome to the repository of the API for "Study Plan Manager" – an application designed to organize and manage academic study plans. This API enables users to store detailed information about subjects, study plans, and their relationships, providing a flexible platform to manage academic progress.
+  # Repository Description
 
-## Key Features:
+  Welcome to the repository of the API for "Study Plan Manager" – an application designed to organize and manage academic study plans. This API enables users to store detailed information about subjects, study plans, and their relationships, providing a flexible platform to manage academic progress.
 
-- **Subject Management:** Store and retrieve detailed information for each subject, including grades, dependencies, current status, and more.
-- **Plan Administration:** Organize, filter, and sort multiple study plans and their subjects, simplifying academic planning.
-- **Advanced Interaction:** Offer various views and utilities such as currently enrollable subjects, blocked/unblocked subjects, averages, and more.
+  ## Key Features:
 
-## Upcoming Features (Future):
+  - **Subject Management:** Store and retrieve detailed information for each subject, including grades, dependencies, current status, and more.
+  - **Plan Administration:** Organize, filter, and sort multiple study plans and their subjects, simplifying academic planning.
+  - **Advanced Interaction:** Offer various views and utilities such as currently enrollable subjects, blocked/unblocked subjects, averages, and more.
 
-- **Plan Sharing:** Allows sharing plans, importing plans from university websites, or PDFs.
-- **Class Schedule Calendar:** Load and display class schedules with special events.
+  ## Upcoming Features (Future):
 
-## Technologies:
+  - **Plan Sharing:** Allows sharing plans, importing plans from university websites, or PDFs.
+  - **Class Schedule Calendar:** Load and display class schedules with special events.
 
-- Developed using Spring Boot for Java.
+  ## Technologies:
+
+  - Developed using Spring Boot for Java.
+
+</details>
+
+<details>
+  <summary>Español :es:</summary>
+
+  # Descripción del Repositorio
+
+  Bienvenido al repositorio de la API para "Gestor de Planes de Estudio" – una aplicación diseñada para organizar y gestionar planes de estudio académicos. Esta API permite a los usuarios almacenar información detallada sobre las asignaturas, los planes de estudio y sus relaciones, proporcionando una plataforma flexible para gestionar el progreso académico.
+
+  ## Características Clave:
+
+  - **Gestión de Asignaturas:** Almacenar y recuperar información detallada de cada asignatura, incluyendo calificaciones, dependencias, estado actual, y más.
+  - **Administración de Planes:** Organizar, filtrar y ordenar múltiples planes de estudio y sus asignaturas, simplificando la planificación académica.
+  - **Interacción Avanzada:** Ofrecer diversas vistas y utilidades como asignaturas actualmente inscribibles, asignaturas bloqueadas/desbloqueadas, promedios, y más.
+
+  ## Características Futuras (Próximamente):
+
+  - **Compartir Planes:** Permite compartir planes, importar planes desde sitios web de universidades o PDFs.
+  - **Calendario de Horarios de Clases:** Cargar y mostrar horarios de clases con eventos especiales.
+
+  ## Tecnologías:
+
+  - Desarrollado utilizando Spring Boot para Java.
+
+</details>
+
