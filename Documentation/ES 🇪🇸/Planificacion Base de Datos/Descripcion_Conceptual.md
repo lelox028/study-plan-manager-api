@@ -6,13 +6,13 @@ De cada carrera (o plan de estudio) se quiere mantener la siguiente información
 - Nombre de la carrera.
 - Fecha de inscripción.
 - Duración de la carrera (en cuatrimestres).
-- Plan de la carrera (enlace o PDF), *opcional*.
+- Plan de la carrera (enlace o PDF), **opcional**.
 - Listado de materias.
 - Promedio.
 - Porcentaje de finalización.
-- Título intermedio *opcional*.
-- Promedio del título intermedio *opcional*.
-- Porcentaje de finalización del título intermedio *opcional*.
+- Título intermedio **opcional**.
+- Promedio del título intermedio **opcional**.
+- Porcentaje de finalización del título intermedio **opcional**.
 
 En cuanto a las materias, se requiere mantener la siguiente información:
 - Nombre de la materia.
@@ -27,8 +27,8 @@ En cuanto a las materias, se requiere mantener la siguiente información:
     - Aprobada (promocionada).
 - Materias necesarias para aprobarla (correlatividades).
 - Materias bloqueadas por esta materia.
-- Fecha de aprobación *si está aprobada*.
-- Fecha de regularización *si está regular*.
-- Calificación *si está aprobada*.
+- Fecha de aprobación **si está aprobada**.
+- Fecha de regularización **si está regular**.
+- Calificación **si está aprobada**.
 
 Con esta información, el sistema debería ser capaz de permitirle al usuario administrar múltiples planes de estudio, correspondientes a diferentes (o la misma) universidades o entidades educativas, además de consultar información útil sobre cada plan, tales como listado completo de materias, listado de materias disponibles para cursar, materias de un año/cuatrimestre específico, porcentaje de finalización de un programa/año/cuatrimestre, promedio actual del plan, de cada año o cuatrimestre y, en el caso de aquellas materias bloqueadas, el motivo por el cual se encuentran bloqueadas.
