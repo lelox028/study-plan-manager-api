@@ -33,8 +33,8 @@
     - Dom(Calificacion) = **Float**
     - Dom(FechaRegularizacion) = **Alfanumerico\***
 ## Relaciones:
-- Pertenecen: (**(x, y)**/ **x** ∈ Facultades, **y** ∈ Universidades ∧ **x** pertenece a **y**)
-- Tienen: (**(x, y)**/ **x** ∈ Facultades, **y** ∈ Carreras ∧ **y** es una carrera o plan ofrecido por **x**).
-- Corresponden: (**(x, y)**/ **x** ∈ Materias, **y** ∈ Carreras ∧ **x** es parte de **y**).
-- Necesitan: (**(x, y)**/ **x** ∈ Materias, **y** ∈ Materias ∧ **x** necesita a **y** para ser cursable).
+- Pertenecen: {**(x, y)**/ **x** ∈ Facultades, **y** ∈ Universidades ∧ **x** pertenece a **y**}
+- Tienen: {**(x, y)**/ **x** ∈ Facultades, **y** ∈ Carreras ∧ **y** es una carrera o plan ofrecido por **x**}.
+- Corresponden: {**(x, y)**/ **x** ∈ Materias, **y** ∈ Carreras ∧ **x** es parte de **y**}.
+- Necesitan: {**(x, y)**/ **x** ∈ Materias, **y** ∈ Materias ∧ **x** necesita a **y** para ser cursable}.
 
