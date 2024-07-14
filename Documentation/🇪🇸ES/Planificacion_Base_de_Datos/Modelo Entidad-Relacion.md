@@ -4,7 +4,7 @@
 
 ## Propiedades de las relaciones:
 - Pertenecen: total y suryectiva.
-- Tienen: total y suryectiva.
+- Dicta: total y suryectiva.
 - Corresponden: total y suryectiva
 - Necesitan: No total y No suryectiva
 ----------------------------------------------------------------------------------------------
@@ -28,13 +28,14 @@
     - Dom(Nombre_M) = **Alfanumerico+**
     - Dom(Año) = **INT**
     - Dom(Cuatrimestre) = **{1,2,"Anual"}**
-    - Dom(Estado) = **{Pendiente y cursable, Pendiente y bloqueada, Cursando, Regular, Aprobado, Aprobado con promocion}**
+    - Dom(Estado) = **{Pendiente, Cursando, Regular, Aprobado, Aprobado con promocion}**
+    - Dom(Cursable) = **{True, False}**
     - Dom(FechaAprobacion) = **Alfanumerico\***
     - Dom(Calificacion) = **Float**
     - Dom(FechaRegularizacion) = **Alfanumerico\***
 ## Relaciones:
 - Pertenecen: {**(x, y)**/ **x** ∈ Facultades, **y** ∈ Universidades ∧ **x** pertenece a **y**}
-- Tienen: {**(x, y)**/ **x** ∈ Facultades, **y** ∈ Carreras ∧ **y** es una carrera o plan ofrecido por **x**}.
+- Dicta: {**(x, y)**/ **x** ∈ Facultades, **y** ∈ Carreras ∧ **y** es una carrera o plan ofrecido por **x**}.
 - Corresponden: {**(x, y)**/ **x** ∈ Materias, **y** ∈ Carreras ∧ **x** es parte de **y**}.
 - Necesitan: {**(x, y)**/ **x** ∈ Materias, **y** ∈ Materias ∧ **x** necesita a **y** para ser cursable}.
 
