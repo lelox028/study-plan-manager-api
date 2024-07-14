@@ -4,8 +4,9 @@
 Utilizando el modelo de Entidad-Relación, se construye el Modelo Relacional, que posteriormente se normalizará de ser necesario y finalmente se utilizará como guía para el desarrollo de la base de datos SQL.
 
 ## Modelado
-**Nota: Solo se especificará el dominio de aquellos atributos que hayan sido agregados o modificados con respecto al modelo anterior. Aquellos que no hayan sufrido modificaciones se omitirán en pos de mejorar la legibilidad.
-Además, se resaltarán aquellos campos que hayan sido agregados.*
+> [!NOTE]  
+>Solo se especificará el dominio de aquellos atributos que hayan sido agregados o modificados con respecto al modelo anterior. Aquellos que no hayan sufrido modificaciones se omitirán en pos de mejorar la legibilidad.
+Además, se resaltarán aquellos campos que hayan sido agregados.
 
 - Universidades = { <u>Nombre_U</u>, <u>**Id_U**</u> }
     - Dom(Id_U) = **INT**
