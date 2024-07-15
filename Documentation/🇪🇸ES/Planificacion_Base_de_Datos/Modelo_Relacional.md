@@ -30,7 +30,7 @@ Los campos subrayados son candidatos a claves de su relacion.
 
 ## Normalización
 
-> [!Note]
+> [!Tip]
 >**Boyce-Codd Normal Form (BCNF):** Para toda dependencia funcional (x->y) en el esquema de base de datos, x debe ser superclave.
 
 ### Listado de Dependencias
