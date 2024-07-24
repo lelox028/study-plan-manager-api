@@ -48,3 +48,10 @@ Los campos subrayados son candidatos a claves de su relacion.
 - Materias (BCNF✔️)
     - Id_M -> { Nombre_M, Año, Cuatrimestre, Estado, FechaAprobacion, Calificacion, FechaRegularizacion, Corresponden_Id_C, Necesitan_Id_M }
     - { Nombre_M, Corresponden_Id_C } -> { Año, Cuatrimestre, Estado, FechaAprobacion, Calificacion, FechaRegularizacion, Id_M, Necesitan_Id_M }
+
+Al desglosar una por una las dependencias de todo el esquema de base de datos vemos que este se encuentra en BCNF, y por ello tambien en 1ra, 2da y 3ra Forma Normal.
+Con esto, la etapa de disenio ha sido concluida y se puede proceder a crear el modelo en SQL. 
+
+## Indexacion
+
+Son necesarios Indices Extras?
