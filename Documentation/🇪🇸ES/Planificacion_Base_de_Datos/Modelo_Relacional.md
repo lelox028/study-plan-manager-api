@@ -1,13 +1,15 @@
 # Modelo Relacional
 
 ## Introducción
+
 Utilizando el modelo de Entidad-Relación, se construye el Modelo Relacional, que posteriormente se normalizará de ser necesario y finalmente se utilizará como guía para el desarrollo de la base de datos SQL.
 
 ## Modelado
+
 > [!Important]  
->Solo se especificará el dominio de aquellos atributos que hayan sido agregados o modificados con respecto al modelo anterior. Aquellos que no hayan sufrido modificaciones se omitirán en pos de mejorar la legibilidad.
-Además, se resaltarán aquellos campos que hayan sido agregados.
-Los campos subrayados son candidatos a claves de su relacion.
+> Solo se especificará el dominio de aquellos atributos que hayan sido agregados o modificados con respecto al modelo anterior. Aquellos que no hayan sufrido modificaciones se omitirán en pos de mejorar la legibilidad.  
+> Además, se resaltarán aquellos campos que hayan sido agregados.  
+> Los campos subrayados son candidatos a claves de su relación.
 
 - Universidades = { <u>Nombre_U</u>, <u>**Id_U**</u> }
     - Dom(Id_U) = **INT**
@@ -25,13 +27,13 @@ Los campos subrayados son candidatos a claves de su relacion.
     - FK = Corresponden_Id_C -> Carreras(Id_C)
     - FK = Necesitan_Id_M -> Materias(Id_M)
 
-> [!Note]
-> Los atributos calculados han sido removidos del modelo relacional, dado que al ser obtenidos a partir de otros atributos, no es necesario mantener info sobre ellos
+> [!Note]  
+> Los atributos calculados han sido removidos del modelo relacional, dado que al ser obtenidos a partir de otros atributos, no es necesario mantener información sobre ellos.
 
 ## Normalización
 
-> [!Tip]
->**Boyce-Codd Normal Form (BCNF):** Para toda dependencia funcional (x->y) en el esquema de base de datos, x debe ser superclave.
+> [!Tip]  
+> **Boyce-Codd Normal Form (BCNF):** Para toda dependencia funcional (x->y) en el esquema de base de datos, x debe ser superclave.
 
 ### Listado de Dependencias
 - Universidades (BCNF✔️)
@@ -49,9 +51,10 @@ Los campos subrayados son candidatos a claves de su relacion.
     - Id_M -> { Nombre_M, Año, Cuatrimestre, Estado, FechaAprobacion, Calificacion, FechaRegularizacion, Corresponden_Id_C, Necesitan_Id_M }
     - { Nombre_M, Corresponden_Id_C } -> { Año, Cuatrimestre, Estado, FechaAprobacion, Calificacion, FechaRegularizacion, Id_M, Necesitan_Id_M }
 
-Al desglosar una por una las dependencias de todo el esquema de base de datos vemos que este se encuentra en BCNF, y por ello tambien en 1ra, 2da y 3ra Forma Normal.
-Con esto, la etapa de disenio ha sido concluida y se puede proceder a crear el modelo en SQL. 
+Al desglosar una por una las dependencias de todo el esquema de base de datos, vemos que este se encuentra en BCNF, y por ello también en 1ra, 2da y 3ra Forma Normal. Con esto, la etapa de diseño ha sido concluida y se puede proceder a crear el modelo en SQL.
 
-## Indexacion
+## Indexación
 
-Son necesarios Indices Extras?
+¿Son necesarios índices extras?
+
+Para resolver esta pregunta, es necesario plantear (al menos como estimado) qué consultas se ejecutarán y en qué proporción.
