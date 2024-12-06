@@ -1,4 +1,4 @@
-package com.lelox028.StudyPlanManagerApi;
+package com.lelox028.StudyPlanManagerApi.Controllers;
 
 import java.util.List;
 
@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lelox028.StudyPlanManagerApi.Models.Universidad;
+import com.lelox028.StudyPlanManagerApi.Services.UniversidadService;
 
 import jakarta.validation.Valid;
 

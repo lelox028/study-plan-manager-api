@@ -1,10 +1,13 @@
-package com.lelox028.StudyPlanManagerApi;
+package com.lelox028.StudyPlanManagerApi.Services;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.lelox028.StudyPlanManagerApi.Models.Universidad;
+import com.lelox028.StudyPlanManagerApi.Repositories.UniversidadRepository;
 
 @Service
 public class UniversidadService {

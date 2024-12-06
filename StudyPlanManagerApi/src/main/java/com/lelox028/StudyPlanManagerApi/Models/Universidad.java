@@ -1,4 +1,4 @@
-package com.lelox028.StudyPlanManagerApi;
+package com.lelox028.StudyPlanManagerApi.Models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
