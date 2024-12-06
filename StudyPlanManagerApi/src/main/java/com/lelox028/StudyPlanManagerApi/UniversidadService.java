@@ -50,4 +50,13 @@ public class UniversidadService {
             throw new RuntimeException("Item not found with ID: " + id);
         }
     }
+
+    public void deleteUniversidad(int id){
+        Optional<Universidad> optionalUniversidad = universidadRepository.findById(id);
+        if (optionalUniversidad.isPresent()) {
+            universidadRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Item not found with ID: " + id);
+        }
+    }
 }
