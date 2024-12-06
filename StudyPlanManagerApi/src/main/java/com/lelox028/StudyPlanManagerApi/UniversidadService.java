@@ -25,4 +25,17 @@ public class UniversidadService {
             throw new RuntimeException("Cannot get item with ID: "+ id);
         }
     }
+
+    public Universidad createUniversidad(Universidad newUniversidad){
+        newUniversidad.setId_Universidad(0);
+        if (universidadRepository.existsByNombreU(newUniversidad.getNombre_Universidad())) {
+            throw new RuntimeException("Ya existe una universidad con el nombre: " + newUniversidad.getNombre_Universidad());
+        }
+        Universidad savedUniversidad = universidadRepository.save(newUniversidad);
+        if (savedUniversidad == null){
+            throw new RuntimeException("Could not create new Universidad");
+        }else{
+            return savedUniversidad;
+        }
+    }
 }

@@ -1,17 +1,26 @@
 package com.lelox028.StudyPlanManagerApi;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Universidades")
 public class Universidad {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_U;
 
-    private String nombre_U;
+    @NotBlank(message = "El nombre de la universidad no puede estar vacío")
+    @Size(min = 3, max = 45, message = "El nombre debe tener entre 3 y 45 caracteres")
+    @Column(name = "Nombre_U", nullable = false, unique = true)
+    private String nombreU;
 
     // Getters y Setters
     public int getId_Universidad() {
@@ -19,7 +28,7 @@ public class Universidad {
     }
 
     public String getNombre_Universidad() {
-        return nombre_U;
+        return nombreU;
     }
 
     public void setId_Universidad(int newId) {
@@ -27,6 +36,6 @@ public class Universidad {
     }
 
     public void setNombre_Universidad(String newNombre) {
-        this.nombre_U = newNombre;
+        this.nombreU = newNombre;
     }
 }
