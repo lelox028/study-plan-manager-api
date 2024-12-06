@@ -38,4 +38,9 @@ public class Universidad {
     public void setNombre_Universidad(String newNombre) {
         this.nombreU = newNombre;
     }
+
+    @Override
+    public String toString() {
+        return "Universidad [id= " + id_U + ", nombre=" + nombreU + "]";
+    }
 }
