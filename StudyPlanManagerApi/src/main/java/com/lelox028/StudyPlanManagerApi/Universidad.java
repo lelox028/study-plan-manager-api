@@ -20,7 +20,7 @@ public class Universidad {
     @NotBlank(message = "El nombre de la universidad no puede estar vacío")
     @Size(min = 3, max = 45, message = "El nombre debe tener entre 3 y 45 caracteres")
     @Column(name = "Nombre_U", nullable = false, unique = true)
-    private String nombreU;
+    private String nombreU; //se tuvo que quitar el guion bajo porque creaba errores en el repositorio
 
     // Getters y Setters
     public int getId_Universidad() {

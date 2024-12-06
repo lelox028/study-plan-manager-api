@@ -38,4 +38,16 @@ public class UniversidadService {
             return savedUniversidad;
         }
     }
+
+    public Universidad updateUniversidad(int id, Universidad updatedUniversidad){
+        Optional<Universidad> optionalUniversidad = universidadRepository.findById(id);
+        if (optionalUniversidad.isPresent()){
+            Universidad oldUniversidad = optionalUniversidad.get();
+            oldUniversidad.setNombre_Universidad(updatedUniversidad.getNombre_Universidad());
+            return universidadRepository.save(oldUniversidad);
+        }
+        else{
+            throw new RuntimeException("Item not found with ID: " + id);
+        }
+    }
 }
