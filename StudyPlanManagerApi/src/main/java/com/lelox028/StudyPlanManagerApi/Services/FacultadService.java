@@ -36,8 +36,6 @@ public class FacultadService {
     public Facultad createFacultad(Facultad newFacultad) {
         newFacultad.setId_F(0);
 
-        System.out.println("Universidad ingresada: "+newFacultad.getUniversidad().toString());
-        System.out.println("Facultad ingresada: "+newFacultad.toString());
         // Validar que la universidad exista
         Optional<Universidad> optionalUniversidad = universidadRepository.findById(newFacultad.getUniversidad().getId_Universidad());
         if (!optionalUniversidad.isPresent()) {
