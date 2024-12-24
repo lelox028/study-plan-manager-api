@@ -144,7 +144,7 @@ public class Materia {
 
     // Enum para el campo Estado
     public enum EstadoMateria {
-        _0, _1, _2, _3, _4;
+        Pendiente, Cursando, Regular, Aprobado, Promocionado;
     }
 
     // Enum para el campo Cuatrimestre
