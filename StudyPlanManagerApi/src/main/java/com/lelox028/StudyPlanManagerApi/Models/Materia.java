@@ -10,10 +10,10 @@ public class Materia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_M")
-    private int idMateria;
+    private int idM;
 
     @Column(name = "Nombre_M", nullable = false, length = 45)
-    private String nombreMateria;
+    private String nombreM;
 
     @Column(name = "Anio", nullable = false)
     private int anio;
@@ -50,19 +50,19 @@ public class Materia {
 
     // Getters y Setters
     public int getIdMateria() {
-        return idMateria;
+        return idM;
     }
 
     public void setIdMateria(int idMateria) {
-        this.idMateria = idMateria;
+        this.idM = idMateria;
     }
 
     public String getNombreMateria() {
-        return nombreMateria;
+        return nombreM;
     }
 
     public void setNombreMateria(String nombreMateria) {
-        this.nombreMateria = nombreMateria;
+        this.nombreM = nombreMateria;
     }
 
     public int getAnio() {
