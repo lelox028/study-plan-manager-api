@@ -26,9 +26,16 @@ public class CarreraService {
     }
 
     // Obtener todas las carreras de una facultad particular
-    public List<Carrera> getAllCarrerasByFacultadId(int idF){
-        return carreraRepository.findByFacultad_Id(idF);
-    }
+    public List<Carrera> getAllCarrerasByFacultadId(int idF) {
+        Optional<Facultad> optionalFacultad = facultadRepository.findById(idF);
+        if (optionalFacultad.isPresent()){
+            Facultad facultad = optionalFacultad.get();
+            return carreraRepository.findByFacultad(facultad);
+        }
+        else{
+            throw new RuntimeException("No existen carreras dictadas por la facultad con ID: "+idF);
+        }
+    }    
 
     // Obtener una carrera por ID
     public Carrera getCarreraById(int id) {
