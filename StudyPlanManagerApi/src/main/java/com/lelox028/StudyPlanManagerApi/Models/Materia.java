@@ -2,6 +2,7 @@ package com.lelox028.StudyPlanManagerApi.Models;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "Materias")
@@ -44,9 +45,13 @@ public class Materia {
     @JoinColumn(name = "Corresponden_Id_C", nullable = false)
     private Carrera carrera;
 
-    @ManyToOne
-    @JoinColumn(name = "Necesitan_Id_M", nullable = false)
-    private Materia materiaRequisito;
+    @ManyToMany
+    @JoinTable(
+      name = "Correlativas",
+      joinColumns = @JoinColumn(name = "Materias_Id_Bloqueada"),
+      inverseJoinColumns = @JoinColumn(name = "Materias_Id_Correlativa")
+    )
+    private Set<Materia> correlativas;
 
     // Getters y Setters
     public int getIdMateria() {
@@ -129,12 +134,12 @@ public class Materia {
         this.carrera = carrera;
     }
 
-    public Materia getMateriaRequisito() {
-        return materiaRequisito;
+    public Set<Materia> getCorrelativas() {
+        return correlativas;
     }
 
-    public void setMateriaRequisito(Materia materiaRequisito) {
-        this.materiaRequisito = materiaRequisito;
+    public void setCorrelativas(Set<Materia> correlativas) {
+        this.correlativas = correlativas;
     }
 
     // Enum para el campo Estado
