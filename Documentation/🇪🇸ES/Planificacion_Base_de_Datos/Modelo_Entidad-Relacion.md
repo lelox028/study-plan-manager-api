@@ -28,7 +28,7 @@
     - Dom(Nombre_M) = **Alfanumerico+**
     - Dom(Año) = **INT**
     - Dom(Cuatrimestre) = **{1,2,"Anual"}**
-    - Dom(Estado) = **{Pendiente, Cursando, Regular, Aprobado, Aprobado con promocion}**
+    - Dom(Estado) = **{Pendiente, Cursando, Regular, Aprobado, Promocionado}**
     - Dom(Cursable) = **{True, False}**
     - Dom(FechaAprobacion) = **Alfanumerico\***
     - Dom(Calificacion) = **Float**
