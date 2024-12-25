@@ -32,6 +32,15 @@ public class MateriaService {
             throw new RuntimeException("No se encontro la materia con ID: " + id);
     }
 
+    public List<Materia> getMateriasByCarreraId(int idC){
+        Optional<Carrera> optionalCarrera = carreraRepository.findById(idC);
+        if(optionalCarrera.isPresent()){
+            Carrera carrera = optionalCarrera.get();
+            return materiaRepository.findByCarrera(carrera);
+        }
+        else throw new RuntimeException("No se encontro la Carrera con ID: "+ idC);
+    }
+
     public Materia createMateria(Materia newMateria) {
         newMateria.setIdMateria(0);
 
