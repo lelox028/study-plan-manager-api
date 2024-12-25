@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lelox028.StudyPlanManagerApi.Models.Universidad;
@@ -19,17 +20,18 @@ import com.lelox028.StudyPlanManagerApi.Services.UniversidadService;
 import jakarta.validation.Valid;
 
 @RestController
+@RequestMapping("/universidades")
 public class UniversidadController {
 
     @Autowired
     private UniversidadService universidadService;
 
-    @GetMapping("/universidades")
+    @GetMapping
     public List<Universidad> getUniversidades() {
         return universidadService.getAllUniversidades();
     }
 
-    @GetMapping("/universidad/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Universidad> getUniversidadById(@PathVariable int id) {
         try {
             Universidad universidad = universidadService.getUniversidadById(id);
@@ -39,7 +41,7 @@ public class UniversidadController {
         }
     }
 
-    @PostMapping("universidad")
+    @PostMapping
     public ResponseEntity<?> createUniversidad(@Valid @RequestBody Universidad universidad) {
         try {
             Universidad newUniversidad = universidadService.createUniversidad(universidad);
@@ -49,7 +51,7 @@ public class UniversidadController {
         }
     }
 
-    @PutMapping("universidad/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Universidad> updateUniversidad(@PathVariable int id,
             @Valid @RequestBody Universidad updatedUniversidad) {
         try {
@@ -61,7 +63,7 @@ public class UniversidadController {
         }
     }
 
-    @DeleteMapping("universidad/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Universidad> deleteUniversidad(@PathVariable int id) {
         try {
             universidadService.deleteUniversidad(id);

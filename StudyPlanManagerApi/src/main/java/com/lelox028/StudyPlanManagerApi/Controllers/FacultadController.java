@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lelox028.StudyPlanManagerApi.Models.Facultad;
@@ -19,17 +20,18 @@ import com.lelox028.StudyPlanManagerApi.Services.FacultadService;
 import jakarta.validation.Valid;
 
 @RestController
+@RequestMapping("/facultades")
 public class FacultadController {
 
     @Autowired
     private FacultadService facultadService;
 
-    @GetMapping("/facultades")
+    @GetMapping
     public List<Facultad> getFacultades() {
         return facultadService.getAllFacultades();
     }
 
-    @GetMapping("/facultad/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Facultad> getFacultadById(@PathVariable int id) {
         try {
             Facultad facultad = facultadService.getFacultadById(id);
@@ -39,7 +41,7 @@ public class FacultadController {
         }
     }
 
-    @PostMapping("/facultad")
+    @PostMapping
     public ResponseEntity<?> createFacultad(@Valid @RequestBody Facultad facultad) {
         try {
             Facultad newFacultad = facultadService.createFacultad(facultad);
@@ -49,7 +51,7 @@ public class FacultadController {
         }
     }
 
-    @PutMapping("/facultad/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Facultad> updateFacultad(@PathVariable int id, @Valid @RequestBody Facultad updatedFacultad) {
         try {
             Facultad updated = facultadService.updateFacultad(id, updatedFacultad);
@@ -59,7 +61,7 @@ public class FacultadController {
         }
     }
 
-    @DeleteMapping("/facultad/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFacultad(@PathVariable int id) {
         try {
             facultadService.deleteFacultad(id);
