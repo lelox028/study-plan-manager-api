@@ -33,6 +33,15 @@ public class FacultadService {
         }
     }
 
+    public List<Facultad> getFacultadesbyUniversidadId(int idU){
+        Optional<Universidad> optionalUniversidad = universidadRepository.findById(idU);
+        if(optionalUniversidad.isPresent()){
+            Universidad universidad = optionalUniversidad.get();
+            return facultadRepository.findByUniversidad(universidad);
+        }
+        else throw new RuntimeException("No se encontro la Carrera con ID: "+ idU);
+    }
+
     public Facultad createFacultad(Facultad newFacultad) {
         newFacultad.setId_F(0);
 

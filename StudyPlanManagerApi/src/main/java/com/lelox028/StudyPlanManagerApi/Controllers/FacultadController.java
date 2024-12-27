@@ -41,6 +41,20 @@ public class FacultadController {
         }
     }
 
+    //Obtener todas las facultades de una determinada universidad
+    @GetMapping("/universidades/{idU}/facultades")
+    public ResponseEntity<List<Facultad>> getFacultadesbyUniversidadId(@PathVariable int idU) {
+        try {
+            List<Facultad> facultades = facultadService.getFacultadesbyUniversidadId(idU);
+            if (facultades.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(facultades);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createFacultad(@Valid @RequestBody Facultad facultad) {
         try {
