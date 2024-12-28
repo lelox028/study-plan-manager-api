@@ -32,16 +32,25 @@ public class MateriaService {
             throw new RuntimeException("No se encontro la materia con ID: " + id);
     }
 
-    public List<Materia> getMateriasByCarreraId(int idC){
+    public List<Materia> getMateriasByCarreraId(int idC) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(idC);
-        if(optionalCarrera.isPresent()){
+        if (optionalCarrera.isPresent()) {
             Carrera carrera = optionalCarrera.get();
             return materiaRepository.findByCarrera(carrera);
-        }
-        else throw new RuntimeException("No se encontro la Carrera con ID: "+ idC);
+        } else
+            throw new RuntimeException("No se encontro la Carrera con ID: " + idC);
     }
 
-    public Materia createMateria(Materia newMateria) { //validar cuatrimestre
+    // Get Approved by Carrera
+    public List<Materia> getApprovedByCarreraId(int idC) {
+        Optional<Carrera> optionalCarrera = carreraRepository.findById(idC);
+        if (optionalCarrera.isPresent()) {
+            return materiaRepository.getApprovedByCarrera(idC);
+        } else
+            throw new RuntimeException("No se encontro la Carrera con ID: " + idC);
+    }
+
+    public Materia createMateria(Materia newMateria) { // validar cuatrimestre
         newMateria.setIdMateria(0);
 
         // Validar que la Carrera exista
@@ -72,7 +81,7 @@ public class MateriaService {
         }
     }
 
-    public Materia updateMateria(int id, Materia updatedMateria) { //validar cuatrimestre
+    public Materia updateMateria(int id, Materia updatedMateria) { // validar cuatrimestre
         Optional<Materia> optionalMateria = materiaRepository.findById(id);
         if (optionalMateria.isPresent()) {
             Materia existingMateria = optionalMateria.get();
@@ -87,7 +96,8 @@ public class MateriaService {
             existingMateria.setCorrelativas(updatedMateria.getCorrelativas());
 
             // Validar que el nombre no se repita en la misma Carrera al actualizar
-            if (materiaRepository.existsByNombreMAndCarrera(updatedMateria.getNombreMateria(), updatedMateria.getCarrera())) {
+            if (materiaRepository.existsByNombreMAndCarrera(updatedMateria.getNombreMateria(),
+                    updatedMateria.getCarrera())) {
                 throw new RuntimeException("Ya existe una Materia con el nombre '" + updatedMateria.getNombreMateria() +
                         "' en la Carrera ID: " + updatedMateria.getCarrera().getId_C());
             }

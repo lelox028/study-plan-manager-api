@@ -47,6 +47,21 @@ public class MateriaController {
         }
     }
 
+    // Obtener todas las materias aprobadas de una carrera
+    @GetMapping("/carreras/{idC}/aprobadas")
+    public ResponseEntity<List<Materia>> getApprovedByCarreraId(@PathVariable int idC){
+        try {
+            List<Materia> materias = materiaService.getApprovedByCarreraId(idC);
+            if (materias.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(materias);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    
+
     // Crear una nueva materia
     @PostMapping
     public ResponseEntity<Materia> createMateria(@RequestBody Materia newMateria) {
