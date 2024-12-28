@@ -8,6 +8,7 @@ import jakarta.validation.constraints.*;
 @Entity
 @Table(name = "Carreras")
 public class Carrera {
+    //comentario test
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
