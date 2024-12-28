@@ -8,7 +8,7 @@ import jakarta.validation.constraints.*;
 @Entity
 @Table(name = "Carreras")
 public class Carrera {
-
+//mas pruebas
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id_C")
