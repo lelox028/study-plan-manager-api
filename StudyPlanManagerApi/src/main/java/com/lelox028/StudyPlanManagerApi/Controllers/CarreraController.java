@@ -37,7 +37,7 @@ public class CarreraController {
     }
 
     // obtener todas las carreras de una determinada facultad
-    @GetMapping("/facultad/{idF}/carreras")
+    @GetMapping("/facultades/{idF}/carreras")
     public ResponseEntity<List<Carrera>> getAllCarrerasByFacultadId(@PathVariable int idF) {
         try {
             List<Carrera> carreras = carreraService.getAllCarrerasByFacultadId(idF);
