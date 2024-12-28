@@ -41,7 +41,7 @@ public class MateriaService {
         else throw new RuntimeException("No se encontro la Carrera con ID: "+ idC);
     }
 
-    public Materia createMateria(Materia newMateria) {
+    public Materia createMateria(Materia newMateria) { //validar cuatrimestre
         newMateria.setIdMateria(0);
 
         // Validar que la Carrera exista
@@ -72,7 +72,7 @@ public class MateriaService {
         }
     }
 
-    public Materia updateMateria(int id, Materia updatedMateria) {
+    public Materia updateMateria(int id, Materia updatedMateria) { //validar cuatrimestre
         Optional<Materia> optionalMateria = materiaRepository.findById(id);
         if (optionalMateria.isPresent()) {
             Materia existingMateria = optionalMateria.get();

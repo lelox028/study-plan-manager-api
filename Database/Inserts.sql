@@ -15,8 +15,8 @@ VALUES
 
 INSERT INTO PlanManager.Materias (Nombre_M, Anio, Cuatrimestre, Estado, FechaAprobacion, Calificacion, FechaRegularizacion, RequeridaPorTituloIntermedio, Corresponden_Id_C)
 VALUES 
-('Calculo I', 1, '1', 'Aprobado', '2024-03-01', 7.5,  '2024-03-01', TRUE, 1),
-('Calculo II', 1, '2', 'Pendiente', NULL, NULL, NULL, TRUE, 1);
+('Calculo I', 1, '1er Cuatrimestre', 'Aprobado', '2024-03-01', 7.5,  '2024-03-01', TRUE, 1),
+('Calculo II', 1, '2do Cuatrimestre', 'Pendiente', NULL, NULL, NULL, TRUE, 1);
 
 INSERT INTO PlanManager.Correlativas (Id_Correlativa, Materias_Id_Bloqueada, Materias_Id_Correlativa)
 VALUES 

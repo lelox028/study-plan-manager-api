@@ -20,8 +20,7 @@ public class Materia {
     private int anio;
 
     @Column(name = "Cuatrimestre", nullable = false, length = 45)
-    @Enumerated(EnumType.STRING)
-    private Cuatrimestre cuatrimestre;
+    private String cuatrimestre;
 
     @Column(name = "Estado", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -78,13 +77,18 @@ public class Materia {
         this.anio = anio;
     }
 
-    public Cuatrimestre getCuatrimestre() {
+    public String getCuatrimestre() {
         return cuatrimestre;
     }
 
-    public void setCuatrimestre(Cuatrimestre cuatrimestre) {
+    public void setCuatrimestre(String cuatrimestre) {
+        if (!cuatrimestre.equals("1er Cuatrimestre") &&
+            !cuatrimestre.equals("2do Cuatrimestre") &&
+            !cuatrimestre.equals("Anual")) {
+            throw new IllegalArgumentException("Valor de cuatrimestre no válido");
+        }
         this.cuatrimestre = cuatrimestre;
-    }
+    }    
 
     public EstadoMateria getEstado() {
         return estado;
@@ -147,8 +151,4 @@ public class Materia {
         Pendiente, Cursando, Regular, Aprobado, Promocionado;
     }
 
-    // Enum para el campo Cuatrimestre
-    public enum Cuatrimestre {
-        _1, _2, Anual;
-    }
 }
