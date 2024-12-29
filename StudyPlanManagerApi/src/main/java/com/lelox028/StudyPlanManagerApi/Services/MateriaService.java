@@ -1,5 +1,6 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,25 +84,20 @@ public class MateriaService {
 
     public Materia updateMateria(int id, Materia updatedMateria) { // validar cuatrimestre
         Optional<Materia> optionalMateria = materiaRepository.findById(id);
+        // Recordar: cada campo no recibido sera considerado NULL y por tanto se eliminara su valor.
         if (optionalMateria.isPresent()) {
             Materia existingMateria = optionalMateria.get();
-            existingMateria.setNombreMateria(updatedMateria.getNombreMateria());
-            existingMateria.setAnio(updatedMateria.getAnio());
-            existingMateria.setCuatrimestre(updatedMateria.getCuatrimestre());
-            existingMateria.setEstado(updatedMateria.getEstado());
-            existingMateria.setFechaAprobacion(updatedMateria.getFechaAprobacion());
-            existingMateria.setCalificacion(updatedMateria.getCalificacion());
-            existingMateria.setFechaRegularizacion(updatedMateria.getFechaRegularizacion());
-            existingMateria.setRequeridaPorTituloIntermedio(updatedMateria.isRequeridaPorTituloIntermedio());
-            existingMateria.setCorrelativas(updatedMateria.getCorrelativas());
-
-            // Validar que el nombre no se repita en la misma Carrera al actualizar
-            if (materiaRepository.existsByNombreMAndCarrera(updatedMateria.getNombreMateria(),
-                    updatedMateria.getCarrera())) {
-                throw new RuntimeException("Ya existe una Materia con el nombre '" + updatedMateria.getNombreMateria() +
-                        "' en la Carrera ID: " + updatedMateria.getCarrera().getId_C());
+            updatedMateria.setIdMateria(id);                        // Settear el identificador al valor correcto
+            Field[] fields = Materia.class.getDeclaredFields();     // Obtener todos los campos de la clase Materia
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);                      // Permitir acceso a campos privados
+                    Object newValue = field.get(updatedMateria);    // Obtener el valor del campo correspondiente en updatedMateria
+                    field.set(existingMateria, newValue);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();                            // Manejar posibles excepciones
+                }
             }
-
             return materiaRepository.save(existingMateria);
         } else {
             throw new RuntimeException("No se encontró una Materia con el ID: " + id);
