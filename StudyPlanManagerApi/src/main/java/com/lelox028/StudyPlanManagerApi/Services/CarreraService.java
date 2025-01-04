@@ -1,5 +1,6 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,20 +83,17 @@ public class CarreraService {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
         if (optionalCarrera.isPresent()) {
             Carrera existingCarrera = optionalCarrera.get();
-            existingCarrera.setNombreC(updatedCarrera.getNombreC());
-            existingCarrera.setFechaInscripcion(updatedCarrera.getFechaInscripcion());
-            existingCarrera.setDuracion(updatedCarrera.getDuracion());
-            existingCarrera.setPlan(updatedCarrera.getPlan());
-            existingCarrera.setTituloIntermedio(updatedCarrera.getTituloIntermedio());
-            existingCarrera.setFacultad(updatedCarrera.getFacultad());
-
-            // Validar que el nombre no se repita en la misma facultad al actualizar
-            if (carreraRepository.existsByNombreCAndFacultad(updatedCarrera.getNombreC(),
-                    updatedCarrera.getFacultad())) {
-                throw new RuntimeException("Ya existe una facultad con el nombre '" + updatedCarrera.getNombreC() +
-                        "' en la facultad ID: " + updatedCarrera.getFacultad().getId_F());
+            updatedCarrera.setId_C(id);                             // Settear el identificador al valor correcto
+            Field[] fields = Carrera.class.getDeclaredFields();     // Obtener todos los campos de la clase Carrera
+            for (Field field : fields) {
+                try {
+                    field.setAccessible(true);                      // Permitir acceso a campos privados
+                    Object newValue = field.get(updatedCarrera);    // Obtener el valor del campo correspondiente en updatedCarrera
+                    field.set(existingCarrera, newValue);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();                            // Manejar posibles excepciones
+                }
             }
-
             return carreraRepository.save(existingCarrera);
 
         } else {
