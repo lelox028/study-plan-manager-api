@@ -73,7 +73,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PlanManager`.`Materias` (
   `Id_M` INT NOT NULL AUTO_INCREMENT,
-  `Nombre_M` VARCHAR(45) NOT NULL,
+  `Nombre_M` VARCHAR(90) NOT NULL,
   `Anio` INT NOT NULL,
   `Cuatrimestre` ENUM("1er Cuatrimestre", "2do Cuatrimestre", "Anual") NOT NULL,
   `Estado` ENUM("Pendiente", "Cursando", "Regular", "Aprobado", "Promocionado") NOT NULL,
