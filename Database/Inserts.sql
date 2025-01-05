@@ -85,3 +85,74 @@ INSERT INTO
     )
 VALUES (2, 1),
     (3, 2);
+
+
+-- datos de prueba para mi carrera actual:
+INSERT INTO `PlanManager`.`Carreras` 
+(`Nombre_C`, `FechaInscripcion`, `Duracion`, `Plan`, `TituloIntermedio`, `Dicta_Id_F`) 
+VALUES 
+('Licenciatura en Informática', '2024-08-01', 5, NULL, 'Analista Universitario', 2);
+
+-- Materias del primer cuatrimestre
+INSERT INTO `PlanManager`.`Materias` 
+(`Nombre_M`, `Anio`, `Cuatrimestre`, `Estado`, `RequeridaPorTituloIntermedio`, `Corresponden_Id_C`) 
+VALUES 
+('Álgebra y Geometría', 1, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Análisis Matemático', 1, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Programación Lógica', 1, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Sistemas de Información', 1, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Idioma Extranjero I', 1, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Lógica Simbólica', 1, '1er Cuatrimestre', 'Pendiente', b'1', 2);
+
+-- Materias del segundo cuatrimestre
+INSERT INTO `PlanManager`.`Materias` 
+(`Nombre_M`, `Anio`, `Cuatrimestre`, `Estado`, `RequeridaPorTituloIntermedio`, `Corresponden_Id_C`) 
+VALUES 
+('Arquitectura del Computador', 1, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Cálculo Avanzado', 1, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Matemática Discreta', 1, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Programación Orientada a Objetos', 1, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Idioma Extranjero II', 1, '2do Cuatrimestre', 'Pendiente', b'1', 2);
+
+-- Materias del tercer cuatrimestre
+INSERT INTO `PlanManager`.`Materias` 
+(`Nombre_M`, `Anio`, `Cuatrimestre`, `Estado`, `RequeridaPorTituloIntermedio`, `Corresponden_Id_C`) 
+VALUES 
+('Estadística y Probabilidad', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Algoritmos y Estructura de Datos I', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Grupo y Liderazgo', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Idioma Extranjero III', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Lenguajes Formales y Computabilidad', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Práctica Solidaria', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Taller de Algoritmos y Estructura de Datos I', 2, '1er Cuatrimestre', 'Pendiente', b'1', 2);
+
+-- Materias del cuarto cuatrimestre
+INSERT INTO `PlanManager`.`Materias` 
+(`Nombre_M`, `Anio`, `Cuatrimestre`, `Estado`, `RequeridaPorTituloIntermedio`, `Corresponden_Id_C`) 
+VALUES 
+('Base de Datos I', 2, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Administración', 2, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Algoritmos y Estructura de Datos II', 2, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Idioma Extranjero IV', 2, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Taller de Algoritmos y Estructuras de Datos II', 2, '2do Cuatrimestre', 'Pendiente', b'1', 2);
+
+-- Materias del quinto cuatrimestre
+INSERT INTO `PlanManager`.`Materias` 
+(`Nombre_M`, `Anio`, `Cuatrimestre`, `Estado`, `RequeridaPorTituloIntermedio`, `Corresponden_Id_C`) 
+VALUES 
+('Análisis y Diseño de Software', 3, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Idioma Extranjero V', 3, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Principios de Economía', 3, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Pruebas de Sistemas', 3, '1er Cuatrimestre', 'Pendiente', b'1', 2),
+('Sistemas Operativos', 3, '1er Cuatrimestre', 'Pendiente', b'1', 2);
+
+-- Materias del sexto cuatrimestre
+INSERT INTO `PlanManager`.`Materias` 
+(`Nombre_M`, `Anio`, `Cuatrimestre`, `Estado`, `RequeridaPorTituloIntermedio`, `Corresponden_Id_C`) 
+VALUES 
+('Ingeniería de Software', 3, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Algoritmos Concurrentes y Paralelos', 3, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Comunicaciones', 3, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Desarrollo Emprendedor', 3, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Idioma Extranjero VI', 3, '2do Cuatrimestre', 'Pendiente', b'1', 2),
+('Seminario de Práctica de Informática', 3, '2do Cuatrimestre', 'Pendiente', b'1', 2);
