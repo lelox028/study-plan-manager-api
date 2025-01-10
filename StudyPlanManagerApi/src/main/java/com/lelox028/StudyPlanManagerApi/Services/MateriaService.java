@@ -1,11 +1,13 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lelox028.StudyPlanManagerApi.Models.Materia;
 import com.lelox028.StudyPlanManagerApi.Models.Carrera;
@@ -80,6 +82,26 @@ public class MateriaService {
         } else {
             return savedMateria;
         }
+    }
+
+    @Transactional
+    public List<Materia> saveAllMaterias(List<Materia> materias) {
+        List<Materia> createdMaterias = new ArrayList<>();
+        for (Materia materia : materias) {
+            createdMaterias.add(createMateria(materia));
+        }
+        return createdMaterias;
+    }
+
+    // Overload para utilizar en caso de que se quiera ingresar un array de materias con una carrera diferente.
+    @Transactional
+    public List<Materia> saveAllMaterias(List<Materia> materias, Carrera carrera) {
+        List<Materia> createdMaterias = new ArrayList<>();
+        for (Materia materia : materias) {
+            materia.setCarrera(carrera);
+            createdMaterias.add(createMateria(materia));
+        }
+        return createdMaterias;
     }
 
     public Materia updateMateria(int id, Materia updatedMateria) { // validar cuatrimestre

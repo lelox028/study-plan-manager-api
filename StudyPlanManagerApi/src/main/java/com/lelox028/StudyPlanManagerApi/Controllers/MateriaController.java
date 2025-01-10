@@ -73,6 +73,17 @@ public class MateriaController {
         }
     }
 
+    // Crear todas las materias de un arreglo
+    @PostMapping("/batch")
+    public ResponseEntity<List<Materia>> createMateriasBatch(@RequestBody List<Materia> materias) {
+        try {
+            List <Materia> createdMaterias = materiaService.saveAllMaterias(materias);
+            return ResponseEntity.ok(createdMaterias);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     // Actualizar una materia existente
     @PutMapping("/{id}")
     public ResponseEntity<Materia> updateMateria(@PathVariable int id, @RequestBody Materia updatedMateria) {
