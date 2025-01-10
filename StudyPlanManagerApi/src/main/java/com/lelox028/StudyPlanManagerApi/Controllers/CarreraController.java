@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.lelox028.StudyPlanManagerApi.DTOs.CarreraMateriasDTO;
 import com.lelox028.StudyPlanManagerApi.Models.Carrera;
 import com.lelox028.StudyPlanManagerApi.Services.CarreraService;
 
@@ -58,6 +59,18 @@ public class CarreraController {
             return new ResponseEntity<>(newCarrera, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body("Error al crear la carrera: " + e.getMessage());
+        }
+    }
+
+    //import a whole DTO
+    @PostMapping("/import")
+    public ResponseEntity<CarreraMateriasDTO> importCarreraWithMaterias(@RequestBody CarreraMateriasDTO carreraMateriasDTO) {
+        try {
+            CarreraMateriasDTO result;
+            result = carreraService.importCarreraWithMaterias(carreraMateriasDTO);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

@@ -1,16 +1,19 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.lelox028.StudyPlanManagerApi.Models.Carrera;
-import com.lelox028.StudyPlanManagerApi.Models.Facultad;
-import com.lelox028.StudyPlanManagerApi.Repositories.CarreraRepository;
-import com.lelox028.StudyPlanManagerApi.Repositories.FacultadRepository;
+import com.lelox028.StudyPlanManagerApi.Models.*;
+import com.lelox028.StudyPlanManagerApi.Repositories.*;
+import com.lelox028.StudyPlanManagerApi.DTOs.*;
 
 @Service
 public class CarreraService {
@@ -21,6 +24,12 @@ public class CarreraService {
     @Autowired
     private FacultadRepository facultadRepository;
 
+    @Autowired
+    private UniversidadRepository universidadRepository;
+
+    @Autowired
+    private MateriaRepository materiaRepository;;
+
     // Obtener todas las carreras
     public List<Carrera> getAllCarreras() {
         return carreraRepository.findAll();
@@ -29,14 +38,13 @@ public class CarreraService {
     // Obtener todas las carreras de una facultad particular
     public List<Carrera> getAllCarrerasByFacultadId(int idF) {
         Optional<Facultad> optionalFacultad = facultadRepository.findById(idF);
-        if (optionalFacultad.isPresent()){
+        if (optionalFacultad.isPresent()) {
             Facultad facultad = optionalFacultad.get();
             return carreraRepository.findByFacultad(facultad);
+        } else {
+            throw new RuntimeException("No existen carreras dictadas por la facultad con ID: " + idF);
         }
-        else{
-            throw new RuntimeException("No existen carreras dictadas por la facultad con ID: "+idF);
-        }
-    }    
+    }
 
     // Obtener una carrera por ID
     public Carrera getCarreraById(int id) {
@@ -78,20 +86,65 @@ public class CarreraService {
         }
     }
 
+    // import a whole DTO containing a Carrera, facultad, Universidad and a list of
+    // Materias.
+    @Transactional
+    public CarreraMateriasDTO importCarreraWithMaterias(CarreraMateriasDTO carreraMateriasDTO) {
+        Carrera newCarrera = carreraMateriasDTO.getCarrera();
+        List<Materia> newMaterias = carreraMateriasDTO.getMaterias();
+
+        // 1. Guardar o verificar universidad
+
+        Universidad tempUniversidad = newCarrera.getFacultad().getUniversidad();
+        Universidad newUniversidad = universidadRepository.findByNombreU(tempUniversidad.getNombre_Universidad())
+                .orElseGet(() -> universidadRepository.save(tempUniversidad));
+
+        // 2. Guardar o verificar facultad
+        Facultad tempFacultad = newCarrera.getFacultad();
+        tempFacultad.setUniversidad(newUniversidad);
+        Facultad newFacultad = facultadRepository.findByNombreFAndUniversidad(tempFacultad.getNombreF(), newUniversidad)
+                .orElseGet(() -> facultadRepository.save(tempFacultad));
+
+        // 3. Guardar o verificar carrera
+        Carrera tempCarrera = newCarrera;
+        tempCarrera.setFacultad(newFacultad);
+        newCarrera = carreraRepository.findByNombreCAndFacultad(tempCarrera.getNombreC(), newFacultad)
+                .orElseGet(() -> carreraRepository.save(tempCarrera));
+
+        // 4. Asociar materias a la carrera
+        for (Materia materia : newMaterias) {
+            Set<Materia> newCorrelativas = new HashSet<>();
+            materia.setCarrera(newCarrera);
+            // revisar correlativas
+            for (Materia correlativa : Optional.ofNullable(materia.getCorrelativas()).orElse(Collections.emptySet())) {
+                Optional<Materia> optionalMateria = materiaRepository
+                        .findByNombreMAndCarrera(correlativa.getNombreMateria(), newCarrera);
+                if (optionalMateria.isPresent()) {
+                    newCorrelativas.add(optionalMateria.get());
+                }
+            }
+            materia.setCorrelativas(newCorrelativas);
+            materiaRepository.save(materia);
+        }
+        CarreraMateriasDTO result = new CarreraMateriasDTO(newCarrera, newMaterias);
+        return result;
+    }
+
     // Actualizar una carrera existente
     public Carrera updateCarrera(int id, Carrera updatedCarrera) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
         if (optionalCarrera.isPresent()) {
             Carrera existingCarrera = optionalCarrera.get();
-            updatedCarrera.setId_C(id);                             // Settear el identificador al valor correcto
-            Field[] fields = Carrera.class.getDeclaredFields();     // Obtener todos los campos de la clase Carrera
+            updatedCarrera.setId_C(id); // Settear el identificador al valor correcto
+            Field[] fields = Carrera.class.getDeclaredFields(); // Obtener todos los campos de la clase Carrera
             for (Field field : fields) {
                 try {
-                    field.setAccessible(true);                      // Permitir acceso a campos privados
-                    Object newValue = field.get(updatedCarrera);    // Obtener el valor del campo correspondiente en updatedCarrera
+                    field.setAccessible(true); // Permitir acceso a campos privados
+                    Object newValue = field.get(updatedCarrera); // Obtener el valor del campo correspondiente en
+                                                                 // updatedCarrera
                     field.set(existingCarrera, newValue);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();                            // Manejar posibles excepciones
+                    e.printStackTrace(); // Manejar posibles excepciones
                 }
             }
             return carreraRepository.save(existingCarrera);
