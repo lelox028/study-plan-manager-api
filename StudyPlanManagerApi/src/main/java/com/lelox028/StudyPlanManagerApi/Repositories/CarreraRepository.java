@@ -1,6 +1,7 @@
 package com.lelox028.StudyPlanManagerApi.Repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +13,5 @@ import com.lelox028.StudyPlanManagerApi.Models.Facultad;
 public interface CarreraRepository extends JpaRepository<Carrera, Integer> {
     boolean existsByNombreCAndFacultad(String nombreC, Facultad facultad);
     List<Carrera> findByFacultad(Facultad facultad);
+    Optional<Carrera> findByNombreCAndFacultad(String nombreC, Facultad facultad);
 }
