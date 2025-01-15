@@ -52,9 +52,7 @@ public class MateriaController {
     public ResponseEntity<List<Materia>> getApprovedByCarreraId(@PathVariable int idC){
         try {
             List<Materia> materias = materiaService.getApprovedByCarreraId(idC);
-            if (materias.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
+           
             return ResponseEntity.ok(materias);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
