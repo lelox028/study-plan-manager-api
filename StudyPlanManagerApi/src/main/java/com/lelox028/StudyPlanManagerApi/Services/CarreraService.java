@@ -155,9 +155,17 @@ public class CarreraService {
     }
 
     // Eliminar una carrera existente
+    @Transactional
     public void deleteCarrera(int id) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
         if (optionalCarrera.isPresent()) {
+
+            Carrera carrera = optionalCarrera.get();
+            List<Materia> materias = materiaRepository.findByCarrera(carrera);
+
+            for (Materia materia : materias) {
+                materiaRepository.deleteById(materia.getIdMateria());
+            }
             carreraRepository.deleteById(id);
         } else {
             throw new RuntimeException("No se encontró la carrera con ID: " + id);

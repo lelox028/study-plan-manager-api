@@ -44,7 +44,7 @@ public class Materia {
     @JoinColumn(name = "Corresponden_Id_C", nullable = false)
     private Carrera carrera;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
       name = "Correlativas",
       joinColumns = @JoinColumn(name = "Materias_Id_Bloqueada"),
