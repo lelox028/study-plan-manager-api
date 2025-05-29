@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `PlanManager`.`Correlativas` (
   CONSTRAINT `fk_Materias_has_Materias_Materias1`
     FOREIGN KEY (`Materias_Id_Bloqueada`)
     REFERENCES `PlanManager`.`Materias` (`Id_M`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Materias_has_Materias_Materias2`
     FOREIGN KEY (`Materias_Id_Correlativa`)
