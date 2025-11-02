@@ -8,44 +8,23 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema PlanManager
 -- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `PlanManager` ;
-
--- -----------------------------------------------------
--- Schema PlanManager
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `PlanManager` ;
 USE `PlanManager` ;
-
--- -----------------------------------------------------
--- Table `PlanManager`.`UserRoles`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PlanManager`.`UserRoles` (
-  `idUserRoles` INT NOT NULL,
-  `RoleName` VARCHAR(90) NOT NULL,
-  PRIMARY KEY (`idUserRoles`),
-  UNIQUE INDEX `RoleName_UNIQUE` (`RoleName` ASC) VISIBLE)
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `PlanManager`.`Usuarios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PlanManager`.`Usuarios` (
-  `idUsuarios` INT NOT NULL,
+  `idUsuarios` INT NOT NULL AUTO_INCREMENT,
   `Username` VARCHAR(45) NOT NULL,
   `Email` VARCHAR(100) NOT NULL,
   `Password` VARCHAR(255) NOT NULL,
-  `FechaRegistro` VARCHAR(45) NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+  `FechaRegistro` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Activo` TINYINT NOT NULL,
-  `UserRoles_idUserRoles` INT NOT NULL,
+  `Rol` ENUM('ADMIN', 'USER') NOT NULL,
   PRIMARY KEY (`idUsuarios`),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC) VISIBLE,
-  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE,
-  INDEX `fk_Usuarios_UserRoles1_idx` (`UserRoles_idUserRoles` ASC) VISIBLE,
-  CONSTRAINT `fk_Usuarios_UserRoles1`
-    FOREIGN KEY (`UserRoles_idUserRoles`)
-    REFERENCES `PlanManager`.`UserRoles` (`idUserRoles`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
@@ -57,11 +36,11 @@ CREATE TABLE IF NOT EXISTS `PlanManager`.`Universidades` (
   `Id_U` INT NOT NULL AUTO_INCREMENT,
   `Usuarios_idUsuarios` INT NOT NULL,
   PRIMARY KEY (`Id_U`),
-  UNIQUE INDEX `Nombre_U_UNIQUE` (`Nombre_U` ASC, `Usuarios_idUsuarios` ASC) VISIBLE,
-  INDEX `fk_Universidades_Usuarios1_idx` (`Usuarios_idUsuarios` ASC) VISIBLE,
+  UNIQUE INDEX `Nombre_U_UNIQUE` (`Nombre_U`, `Usuarios_idUsuarios`),
+  INDEX `fk_Universidades_Usuarios1_idx` (`Usuarios_idUsuarios`),
   CONSTRAINT `fk_Universidades_Usuarios1`
     FOREIGN KEY (`Usuarios_idUsuarios`)
-    REFERENCES `PlanManager`.`Usuarios` (`idUsuarios`)
+    REFERENCES `Usuarios` (`idUsuarios`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
