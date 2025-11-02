@@ -1,15 +1,15 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.lelox028.StudyPlanManagerApi.Models.Facultad;
+import com.lelox028.StudyPlanManagerApi.Models.Universidad;
+import com.lelox028.StudyPlanManagerApi.Models.Usuario;
+import com.lelox028.StudyPlanManagerApi.Repositories.FacultadRepository;
+import com.lelox028.StudyPlanManagerApi.Repositories.UniversidadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lelox028.StudyPlanManagerApi.Models.Facultad;
-import com.lelox028.StudyPlanManagerApi.Models.Universidad;
-import com.lelox028.StudyPlanManagerApi.Repositories.FacultadRepository;
-import com.lelox028.StudyPlanManagerApi.Repositories.UniversidadRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FacultadService {
@@ -20,84 +20,53 @@ public class FacultadService {
     @Autowired
     private UniversidadRepository universidadRepository;
 
-    public List<Facultad> getAllFacultades() {
-        return facultadRepository.findAll();
+    // Obtener todas las facultades del usuario (a través de sus universidades)
+    public List<Facultad> getAllFacultades(Usuario usuario) {
+        List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
+        return facultadRepository.findByUniversidadIn(universidades);  // Necesitas este método en FacultadRepository
     }
 
-    public Facultad getFacultadById(int id) {
+    // Obtener facultad por ID, solo si pertenece a una universidad del usuario
+    public Facultad getFacultadById(int id, Usuario usuario) {
         Optional<Facultad> optionalFacultad = facultadRepository.findById(id);
         if (optionalFacultad.isPresent()) {
-            return optionalFacultad.get();
-        } else {
-            throw new RuntimeException("No se encontró una facultad con el ID: " + id);
-        }
-    }
-
-    public List<Facultad> getFacultadesbyUniversidadId(int idU){
-        Optional<Universidad> optionalUniversidad = universidadRepository.findById(idU);
-        if(optionalUniversidad.isPresent()){
-            Universidad universidad = optionalUniversidad.get();
-            return facultadRepository.findByUniversidad(universidad);
-        }
-        else throw new RuntimeException("No se encontro la Carrera con ID: "+ idU);
-    }
-
-    public Facultad createFacultad(Facultad newFacultad) {
-        newFacultad.setId_F(0);
-
-        // Validar que la universidad exista
-        Optional<Universidad> optionalUniversidad = universidadRepository.findById(newFacultad.getUniversidad().getId_Universidad());
-        if (!optionalUniversidad.isPresent()) {
-            throw new RuntimeException(
-                    "No se encontró la universidad con el ID: " + newFacultad.getUniversidad().getId_Universidad());
-        }
-        else{
-            // si el id de la universidad existe, me aseguro de que la facultad nueva se guarde con todos los datos de la universidad correspondiente al id recibido.
-            Universidad tempUniversidad = optionalUniversidad.get();
-            newFacultad.setUniversidad(tempUniversidad);
-        }
-
-        // Validar que el nombre no se repita en la misma universidad
-        if (facultadRepository.existsByNombreFAndUniversidad(newFacultad.getNombreF(), newFacultad.getUniversidad())) {
-            throw new RuntimeException("Ya existe una facultad con el nombre '" + newFacultad.getNombreF() +
-                    "' en la universidad ID: " + newFacultad.getUniversidad().getId_Universidad());
-        }
-
-        newFacultad.setUniversidad(optionalUniversidad.get());
-        Facultad savedFacultad = facultadRepository.save(newFacultad);
-
-        if (savedFacultad == null) {
-            throw new RuntimeException("No se pudo crear la nueva facultad");
-        } else {
-            return savedFacultad;
-        }
-    }
-
-    public Facultad updateFacultad(int id, Facultad updatedFacultad) {
-        Optional<Facultad> optionalFacultad = facultadRepository.findById(id);
-        if (optionalFacultad.isPresent()) {
-            Facultad existingFacultad = optionalFacultad.get();
-            existingFacultad.setNombreF(updatedFacultad.getNombreF());
-
-            // Validar que el nombre no se repita en la misma universidad al actualizar
-            if (facultadRepository.existsByNombreFAndUniversidad(updatedFacultad.getNombreF(),
-                    updatedFacultad.getUniversidad())) {
-                throw new RuntimeException("Ya existe una facultad con el nombre '" + updatedFacultad.getNombreF() +
-                        "' en la universidad ID: " + updatedFacultad.getUniversidad().getId_Universidad());
+            Universidad universidad = optionalFacultad.get().getUniversidad();
+            if (universidad.getUsuario().equals(usuario)) {
+                return optionalFacultad.get();
             }
-
-            return facultadRepository.save(existingFacultad);
-        } else {
-            throw new RuntimeException("No se encontró una facultad con el ID: " + id);
         }
+        throw new RuntimeException("Facultad no encontrada o no pertenece al usuario");
     }
 
-    public void deleteFacultad(int id) {
-        Optional<Facultad> optionalFacultad = facultadRepository.findById(id);
-        if (optionalFacultad.isPresent()) {
-            facultadRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("No se encontró una facultad con el ID: " + id);
+    // Obtener facultades por universidad ID, solo si la universidad pertenece al usuario
+    public List<Facultad> getFacultadesbyUniversidadId(int idU, Usuario usuario) {
+        Optional<Universidad> optionalUniversidad = universidadRepository.findById(idU);
+        if (optionalUniversidad.isPresent() && optionalUniversidad.get().getUsuario().equals(usuario)) {
+            return facultadRepository.findByUniversidad(optionalUniversidad.get());
         }
+        throw new RuntimeException("Universidad no encontrada o no pertenece al usuario");
+    }
+
+    // Crear facultad, asignada a una universidad del usuario
+    public Facultad createFacultad(Facultad newFacultad, Usuario usuario) {
+        Universidad universidad = newFacultad.getUniversidad();
+        if (universidad == null || !universidad.getUsuario().equals(usuario)) {
+            throw new RuntimeException("Universidad no válida o no pertenece al usuario");
+        }
+        return facultadRepository.save(newFacultad);
+    }
+
+    // Actualizar facultad, solo si pertenece al usuario
+    public Facultad updateFacultad(int id, Facultad updatedFacultad, Usuario usuario) {
+        Facultad existing = getFacultadById(id, usuario);
+        existing.setNombreF(updatedFacultad.getNombreF());
+        existing.setUniversidad(updatedFacultad.getUniversidad());  // Validar que la nueva universidad pertenezca al usuario
+        return facultadRepository.save(existing);
+    }
+
+    // Eliminar facultad, solo si pertenece al usuario
+    public void deleteFacultad(int id, Usuario usuario) {
+        Facultad facultad = getFacultadById(id, usuario);
+        facultadRepository.deleteById(id);
     }
 }

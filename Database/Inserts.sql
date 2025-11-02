@@ -47,8 +47,8 @@ LOCK TABLES `Usuarios` WRITE;
 /*!40000 ALTER TABLE `Usuarios` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `Usuarios` VALUES
-(1, 'admin', 'admin@email.com', '$2a$10$adminhash', NOW(), 1, 'ADMIN'),
-(2, 'lelox', 'lelox@email.com', '$2a$10$leloxhash', NOW(), 1, 'USER');
+(1, 'admin', 'admin@email.com', '$2a$12$0y1eisowgV999SQjDr5h/u3jxta/hOCzNN.1mPSI0/io6dcvrx5Q.', NOW(), 1, 'ADMIN'),
+(2, 'lelox', 'lelox@email.com', '$2a$12$0y1eisowgV999SQjDr5h/u3jxta/hOCzNN.1mPSI0/io6dcvrx5Q.', NOW(), 1, 'USER');
 /*!40000 ALTER TABLE `Usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;

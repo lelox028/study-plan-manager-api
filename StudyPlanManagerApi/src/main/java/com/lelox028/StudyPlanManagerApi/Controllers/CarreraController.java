@@ -1,17 +1,18 @@
 package com.lelox028.StudyPlanManagerApi.Controllers;
 
-import java.util.List;
-
+import com.lelox028.StudyPlanManagerApi.DTOs.CarreraMateriasDTO;
+import com.lelox028.StudyPlanManagerApi.Models.Carrera;
+import com.lelox028.StudyPlanManagerApi.Models.Usuario;
+import com.lelox028.StudyPlanManagerApi.Services.CarreraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.lelox028.StudyPlanManagerApi.DTOs.CarreraMateriasDTO;
-import com.lelox028.StudyPlanManagerApi.Models.Carrera;
-import com.lelox028.StudyPlanManagerApi.Services.CarreraService;
-
 import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/carreras")
@@ -20,46 +21,56 @@ public class CarreraController {
     @Autowired
     private CarreraService carreraService;
 
+    private Usuario getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Usuario) authentication.getPrincipal();
+    }
+
     // Obtener todas las carreras
     @GetMapping
     public List<Carrera> getCarreras() {
-        return carreraService.getAllCarreras();
+        Usuario usuario = getAuthenticatedUser();
+        return carreraService.getAllCarreras(usuario);
     }
 
     // Obtener una carrera por ID
     @GetMapping("/{id}")
     public ResponseEntity<Carrera> getCarreraById(@PathVariable int id) {
-        try {
-            Carrera carrera = carreraService.getCarreraById(id);
-            return ResponseEntity.ok(carrera);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Usuario usuario = getAuthenticatedUser();
+        Carrera carrera = carreraService.getCarreraById(id, usuario);
+        return ResponseEntity.ok(carrera);
     }
 
     // obtener todas las carreras de una determinada facultad
     @GetMapping("/facultades/{idF}/carreras")
-    public ResponseEntity<List<Carrera>> getAllCarrerasByFacultadId(@PathVariable int idF) {
-        try {
-            List<Carrera> carreras = carreraService.getAllCarrerasByFacultadId(idF);
-            if (carreras.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(carreras);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    public ResponseEntity<List<Carrera>> getCarrerasByFacultadId(@PathVariable int idF) {
+        Usuario usuario = getAuthenticatedUser();
+        List<Carrera> carreras = carreraService.getCarrerasByFacultadId(idF, usuario);
+        return ResponseEntity.ok(carreras);
     }
 
     // Crear una nueva carrera
     @PostMapping
-    public ResponseEntity<?> createCarrera(@Valid @RequestBody Carrera carrera) {
-        try {
-            Carrera newCarrera = carreraService.createCarrera(carrera);
-            return new ResponseEntity<>(newCarrera, HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Error al crear la carrera: " + e.getMessage());
-        }
+    public ResponseEntity<Carrera> createCarrera(@Valid @RequestBody Carrera carrera) {
+        Usuario usuario = getAuthenticatedUser();
+        Carrera created = carreraService.createCarrera(carrera, usuario);
+        return ResponseEntity.ok(created);
+    }
+
+    // Actualizar una carrera existente
+    @PutMapping("/{id}")
+    public ResponseEntity<Carrera> updateCarrera(@PathVariable int id, @Valid @RequestBody Carrera updatedCarrera) {
+        Usuario usuario = getAuthenticatedUser();
+        Carrera updated = carreraService.updateCarrera(id, updatedCarrera, usuario);
+        return ResponseEntity.ok(updated);
+    }
+
+    // Eliminar una carrera existente
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCarrera(@PathVariable int id) {
+        Usuario usuario = getAuthenticatedUser();
+        carreraService.deleteCarrera(id, usuario);
+        return ResponseEntity.noContent().build();
     }
 
     //import a whole DTO
@@ -71,28 +82,6 @@ public class CarreraController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
-    // Actualizar una carrera existente
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCarrera(@PathVariable int id, @Valid @RequestBody Carrera updatedCarrera) {
-        try {
-            Carrera carrera = carreraService.updateCarrera(id, updatedCarrera);
-            return ResponseEntity.ok(carrera);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Error al actualizar la carrera: " + e.getMessage());
-        }
-    }
-
-    // Eliminar una carrera existente
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCarrera(@PathVariable int id) {
-        try {
-            carreraService.deleteCarrera(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Error al eliminar la carrera: " + e.getMessage());
         }
     }
 }

@@ -19,6 +19,13 @@ import com.lelox028.StudyPlanManagerApi.Services.FacultadService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.lelox028.StudyPlanManagerApi.Models.Usuario;
+
 @RestController
 @RequestMapping("/facultades")
 public class FacultadController {
@@ -26,62 +33,50 @@ public class FacultadController {
     @Autowired
     private FacultadService facultadService;
 
+    private Usuario getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (Usuario) authentication.getPrincipal();
+    }
+
     @GetMapping
     public List<Facultad> getFacultades() {
-        return facultadService.getAllFacultades();
+        Usuario usuario = getAuthenticatedUser();
+        return facultadService.getAllFacultades(usuario);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Facultad> getFacultadById(@PathVariable int id) {
-        try {
-            Facultad facultad = facultadService.getFacultadById(id);
-            return ResponseEntity.ok(facultad);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Usuario usuario = getAuthenticatedUser();
+        Facultad facultad = facultadService.getFacultadById(id, usuario);
+        return ResponseEntity.ok(facultad);
     }
 
     //Obtener todas las facultades de una determinada universidad
     @GetMapping("/universidades/{idU}/facultades")
     public ResponseEntity<List<Facultad>> getFacultadesbyUniversidadId(@PathVariable int idU) {
-        try {
-            List<Facultad> facultades = facultadService.getFacultadesbyUniversidadId(idU);
-            if (facultades.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(facultades);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        Usuario usuario = getAuthenticatedUser();
+        List<Facultad> facultades = facultadService.getFacultadesbyUniversidadId(idU, usuario);
+        return ResponseEntity.ok(facultades);
     }
 
     @PostMapping
     public ResponseEntity<?> createFacultad(@Valid @RequestBody Facultad facultad) {
-        try {
-            Facultad newFacultad = facultadService.createFacultad(facultad);
-            return new ResponseEntity<>(newFacultad, HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Error al crear la facultad: " + e.getMessage());
-        }
+        Usuario usuario = getAuthenticatedUser();
+        Facultad created = facultadService.createFacultad(facultad, usuario);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Facultad> updateFacultad(@PathVariable int id, @Valid @RequestBody Facultad updatedFacultad) {
-        try {
-            Facultad updated = facultadService.updateFacultad(id, updatedFacultad);
-            return ResponseEntity.ok(updated);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Usuario usuario = getAuthenticatedUser();
+        Facultad updated = facultadService.updateFacultad(id, updatedFacultad, usuario);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFacultad(@PathVariable int id) {
-        try {
-            facultadService.deleteFacultad(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Usuario usuario = getAuthenticatedUser();
+        facultadService.deleteFacultad(id, usuario);
+        return ResponseEntity.noContent().build();
     }
 }

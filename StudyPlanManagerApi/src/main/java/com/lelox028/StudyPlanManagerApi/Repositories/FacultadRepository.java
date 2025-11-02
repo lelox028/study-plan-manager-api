@@ -11,7 +11,7 @@ import com.lelox028.StudyPlanManagerApi.Models.Universidad;
 
 @Repository
 public interface FacultadRepository extends JpaRepository<Facultad, Integer> {
-    boolean existsByNombreFAndUniversidad(String nombreF, Universidad universidad);
     List<Facultad> findByUniversidad(Universidad universidad);
+    List<Facultad> findByUniversidadIn(List<Universidad> universidades);
     Optional<Facultad> findByNombreFAndUniversidad(String nombreF, Universidad universidad);
 }
