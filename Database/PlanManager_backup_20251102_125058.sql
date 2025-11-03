@@ -1,5 +1,3 @@
-USE PlanManager;
-
 /*M!999999\- enable the sandbox mode */ 
 -- MariaDB dump 10.19-12.0.2-MariaDB, for Linux (x86_64)
 --
@@ -19,107 +17,6 @@ USE PlanManager;
 /*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
 --
--- Table structure for table `Usuarios`
---
-
-DROP TABLE IF EXISTS `Usuarios`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE IF NOT EXISTS `Usuarios` (
-  `idUsuarios` INT NOT NULL AUTO_INCREMENT,
-  `Username` VARCHAR(45) NOT NULL,
-  `Email` VARCHAR(100) NOT NULL,
-  `Password` VARCHAR(255) NOT NULL,
-  `FechaRegistro` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `Activo` TINYINT NOT NULL,
-  `Rol` ENUM('ADMIN', 'USER') NOT NULL,
-  PRIMARY KEY (`idUsuarios`),
-  UNIQUE INDEX `Username_UNIQUE` (`Username` ASC) VISIBLE,
-  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Usuarios`
---
-
-LOCK TABLES `Usuarios` WRITE;
-/*!40000 ALTER TABLE `Usuarios` DISABLE KEYS */;
-set autocommit=0;
-INSERT INTO `Usuarios` VALUES
-(1, 'admin', 'admin@email.com', '$2a$12$0y1eisowgV999SQjDr5h/u3jxta/hOCzNN.1mPSI0/io6dcvrx5Q.', NOW(), 1, 'ADMIN'),
-(2, 'lelox', 'lelox@email.com', '$2a$12$0y1eisowgV999SQjDr5h/u3jxta/hOCzNN.1mPSI0/io6dcvrx5Q.', NOW(), 1, 'USER');
-/*!40000 ALTER TABLE `Usuarios` ENABLE KEYS */;
-UNLOCK TABLES;
-commit;
-
---
--- Table structure for table `Universidades`
---
-
-DROP TABLE IF EXISTS `Universidades`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Universidades` (
-  `Nombre_U` varchar(45) NOT NULL,
-  `Id_U` int(11) NOT NULL AUTO_INCREMENT,
-  `Usuarios_idUsuarios` INT NOT NULL,
-  PRIMARY KEY (`Id_U`),
-  UNIQUE KEY `Nombre_U_UNIQUE` (`Nombre_U`, `Usuarios_idUsuarios`),
-  INDEX `fk_Universidades_Usuarios1_idx` (`Usuarios_idUsuarios`),
-  CONSTRAINT `fk_Universidades_Usuarios1`
-    FOREIGN KEY (`Usuarios_idUsuarios`)
-    REFERENCES `Usuarios` (`idUsuarios`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Universidades`
---
-
-LOCK TABLES `Universidades` WRITE;
-/*!40000 ALTER TABLE `Universidades` DISABLE KEYS */;
-set autocommit=0;
-INSERT INTO `Universidades` VALUES
-('Siglo 21', 1, 2);
-/*!40000 ALTER TABLE `Universidades` ENABLE KEYS */;
-UNLOCK TABLES;
-commit;
-
---
--- Table structure for table `Facultades`
---
-
-DROP TABLE IF EXISTS `Facultades`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Facultades` (
-  `Id_F` int(11) NOT NULL AUTO_INCREMENT,
-  `Nombre_F` varchar(45) NOT NULL,
-  `Pertenecen_Id_U` int(11) NOT NULL,
-  PRIMARY KEY (`Id_F`),
-  UNIQUE KEY `ALTERNATIVE` (`Pertenecen_Id_U`,`Nombre_F`),
-  CONSTRAINT `fk_Facultades_1` FOREIGN KEY (`Pertenecen_Id_U`) REFERENCES `Universidades` (`Id_U`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Facultades`
---
-
-LOCK TABLES `Facultades` WRITE;
-/*!40000 ALTER TABLE `Facultades` DISABLE KEYS */;
-set autocommit=0;
-INSERT INTO `Facultades` VALUES
-(2,'Default',1),
-(1,'test',1);
-/*!40000 ALTER TABLE `Facultades` ENABLE KEYS */;
-UNLOCK TABLES;
-commit;
-
---
 -- Table structure for table `Carreras`
 --
 
@@ -136,7 +33,7 @@ CREATE TABLE `Carreras` (
   `Dicta_Id_F` int(11) NOT NULL,
   PRIMARY KEY (`Id_C`),
   KEY `fk_Carreras_Facultades1_idx` (`Dicta_Id_F`),
-  CONSTRAINT `fk_Carreras_Facultades1` FOREIGN KEY (`Dicta_Id_F`) REFERENCES `Facultades` (`Id_F`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `fk_Carreras_Facultades1` FOREIGN KEY (`Dicta_Id_F`) REFERENCES `Facultades` (`Id_F`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -151,6 +48,83 @@ INSERT INTO `Carreras` VALUES
 (1,'lic infor','2025-08-08 00:00:00.000000',3,NULL,NULL,1),
 (2,'Licenciatura en Informática','2024-08-01 00:00:00.000000',5,NULL,'Analista Universitario',2);
 /*!40000 ALTER TABLE `Carreras` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+
+--
+-- Table structure for table `Correlativas`
+--
+
+DROP TABLE IF EXISTS `Correlativas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Correlativas` (
+  `Materias_Id_Bloqueada` int(11) NOT NULL,
+  `Materias_Id_Correlativa` int(11) NOT NULL,
+  PRIMARY KEY (`Materias_Id_Bloqueada`,`Materias_Id_Correlativa`),
+  KEY `fk_Materias_has_Materias_Materias2_idx` (`Materias_Id_Correlativa`),
+  KEY `fk_Materias_has_Materias_Materias1_idx` (`Materias_Id_Bloqueada`),
+  CONSTRAINT `fk_Materias_has_Materias_Materias1` FOREIGN KEY (`Materias_Id_Bloqueada`) REFERENCES `Materias` (`Id_M`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Materias_has_Materias_Materias2` FOREIGN KEY (`Materias_Id_Correlativa`) REFERENCES `Materias` (`Id_M`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Correlativas`
+--
+
+LOCK TABLES `Correlativas` WRITE;
+/*!40000 ALTER TABLE `Correlativas` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `Correlativas` VALUES
+(17,11),
+(36,15),
+(37,16),
+(22,19),
+(27,19),
+(30,22),
+(32,22),
+(30,27),
+(32,27),
+(43,28),
+(33,30),
+(33,32),
+(43,33),
+(43,36),
+(40,37),
+(45,44);
+/*!40000 ALTER TABLE `Correlativas` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+
+--
+-- Table structure for table `Facultades`
+--
+
+DROP TABLE IF EXISTS `Facultades`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Facultades` (
+  `Id_F` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre_F` varchar(45) NOT NULL,
+  `Pertenecen_Id_U` int(11) NOT NULL,
+  PRIMARY KEY (`Id_F`),
+  UNIQUE KEY `ALTERNATIVE` (`Pertenecen_Id_U`,`Nombre_F`),
+  CONSTRAINT `fk_Facultades_1` FOREIGN KEY (`Pertenecen_Id_U`) REFERENCES `Universidades` (`Id_U`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Facultades`
+--
+
+LOCK TABLES `Facultades` WRITE;
+/*!40000 ALTER TABLE `Facultades` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `Facultades` VALUES
+(2,'Default',1),
+(1,'test',1);
+/*!40000 ALTER TABLE `Facultades` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
 
@@ -175,7 +149,7 @@ CREATE TABLE `Materias` (
   PRIMARY KEY (`Id_M`),
   UNIQUE KEY `Alternative` (`Nombre_M`,`Corresponden_Id_C`),
   KEY `fk_Materias_Carreras1_idx` (`Corresponden_Id_C`),
-  CONSTRAINT `fk_Materias_Carreras1` FOREIGN KEY (`Corresponden_Id_C`) REFERENCES `Carreras` (`Id_C`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `fk_Materias_Carreras1` FOREIGN KEY (`Corresponden_Id_C`) REFERENCES `Carreras` (`Id_C`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -229,51 +203,32 @@ UNLOCK TABLES;
 commit;
 
 --
--- Table structure for table `Correlativas`
+-- Table structure for table `Universidades`
 --
 
-DROP TABLE IF EXISTS `Correlativas`;
+DROP TABLE IF EXISTS `Universidades`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Correlativas` (
-  `Materias_Id_Bloqueada` int(11) NOT NULL,
-  `Materias_Id_Correlativa` int(11) NOT NULL,
-  PRIMARY KEY (`Materias_Id_Bloqueada`,`Materias_Id_Correlativa`),
-  KEY `fk_Materias_has_Materias_Materias2_idx` (`Materias_Id_Correlativa`),
-  KEY `fk_Materias_has_Materias_Materias1_idx` (`Materias_Id_Bloqueada`),
-  CONSTRAINT `fk_Materias_has_Materias_Materias1` FOREIGN KEY (`Materias_Id_Bloqueada`) REFERENCES `Materias` (`Id_M`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Materias_has_Materias_Materias2` FOREIGN KEY (`Materias_Id_Correlativa`) REFERENCES `Materias` (`Id_M`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `Universidades` (
+  `Nombre_U` varchar(45) NOT NULL,
+  `Id_U` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`Id_U`),
+  UNIQUE KEY `Nombre_U_UNIQUE` (`Nombre_U`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Correlativas`
+-- Dumping data for table `Universidades`
 --
 
-LOCK TABLES `Correlativas` WRITE;
-/*!40000 ALTER TABLE `Correlativas` DISABLE KEYS */;
+LOCK TABLES `Universidades` WRITE;
+/*!40000 ALTER TABLE `Universidades` DISABLE KEYS */;
 set autocommit=0;
-INSERT INTO `Correlativas` VALUES
-(17,11),
-(36,15),
-(37,16),
-(22,19),
-(27,19),
-(30,22),
-(32,22),
-(30,27),
-(32,27),
-(43,28),
-(33,30),
-(33,32),
-(43,33),
-(43,36),
-(40,37),
-(45,44);
-/*!40000 ALTER TABLE `Correlativas` ENABLE KEYS */;
+INSERT INTO `Universidades` VALUES
+('Siglo 21',1);
+/*!40000 ALTER TABLE `Universidades` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
-
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

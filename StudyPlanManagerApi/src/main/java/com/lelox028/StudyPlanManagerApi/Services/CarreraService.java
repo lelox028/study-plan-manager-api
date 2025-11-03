@@ -1,19 +1,27 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
-import java.lang.reflect.Field;
+
+import com.lelox028.StudyPlanManagerApi.DTOs.CarreraMateriasDTO;
+import com.lelox028.StudyPlanManagerApi.Models.Carrera;
+import com.lelox028.StudyPlanManagerApi.Models.Facultad;
+import com.lelox028.StudyPlanManagerApi.Models.Materia;
+import com.lelox028.StudyPlanManagerApi.Models.Universidad;
+import com.lelox028.StudyPlanManagerApi.Models.Usuario;
+import com.lelox028.StudyPlanManagerApi.Repositories.CarreraRepository;
+import com.lelox028.StudyPlanManagerApi.Repositories.FacultadRepository;
+import com.lelox028.StudyPlanManagerApi.Repositories.MateriaRepository;
+import com.lelox028.StudyPlanManagerApi.Repositories.UniversidadRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.lelox028.StudyPlanManagerApi.Models.*;
-import com.lelox028.StudyPlanManagerApi.Repositories.*;
-import com.lelox028.StudyPlanManagerApi.DTOs.*;
+import java.util.stream.Collectors;
+import java.util.Objects;  // Agregado
 
 @Service
 public class CarreraService {
@@ -28,62 +36,48 @@ public class CarreraService {
     private UniversidadRepository universidadRepository;
 
     @Autowired
-    private MateriaRepository materiaRepository;;
+    private MateriaRepository materiaRepository;
 
-    // Obtener todas las carreras
-    public List<Carrera> getAllCarreras() {
-        return carreraRepository.findAll();
+    // Obtener todas las carreras del usuario (a través de sus universidades/facultades)
+    public List<Carrera> getAllCarreras(Usuario usuario) {
+        List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
+        List<Facultad> facultades = facultadRepository.findByUniversidadIn(universidades);
+        return carreraRepository.findByFacultadIn(facultades);
     }
 
-    // Obtener todas las carreras de una facultad particular
-    public List<Carrera> getAllCarrerasByFacultadId(int idF) {
-        Optional<Facultad> optionalFacultad = facultadRepository.findById(idF);
-        if (optionalFacultad.isPresent()) {
-            Facultad facultad = optionalFacultad.get();
-            return carreraRepository.findByFacultad(facultad);
-        } else {
-            throw new RuntimeException("No existen carreras dictadas por la facultad con ID: " + idF);
-        }
-    }
-
-    // Obtener una carrera por ID
-    public Carrera getCarreraById(int id) {
+    // Obtener carrera por ID, solo si pertenece a una facultad del usuario
+    public Carrera getCarreraById(int id, Usuario usuario) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
         if (optionalCarrera.isPresent()) {
-            return optionalCarrera.get();
-        } else {
-            throw new RuntimeException("No se encontró la carrera con ID: " + id);
+            Carrera carrera = optionalCarrera.get();
+            if (Objects.equals(carrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+                return carrera;
+            }
         }
+        throw new RuntimeException("Carrera no encontrada o no pertenece al usuario");
     }
 
-    // Crear una nueva carrera
-    public Carrera createCarrera(Carrera newCarrera) {
-        newCarrera.setId_C(0); // Forzar la creación de una nueva carrera
-
-        // Validar que la facultad exista
-        Optional<Facultad> optionalFacultad = facultadRepository.findById(newCarrera.getFacultad().getId_F());
-        if (!optionalFacultad.isPresent()) {
-            throw new RuntimeException(
-                    "No se encontró la facultad con el ID: " + newCarrera.getFacultad().getId_F());
-        } else {
-            // si el id de la facultad existe, me aseguro de que la carrera nueva se guarde
-            // con todos los datos de la facultad correspondiente al id recibido.
-            Facultad tempfFacultad = optionalFacultad.get();
-            newCarrera.setFacultad(tempfFacultad);
+    // Obtener carreras por facultad ID, solo si la facultad pertenece al usuario
+    public List<Carrera> getCarrerasByFacultadId(int idF, Usuario usuario) {
+        Optional<Facultad> optionalFacultad = facultadRepository.findById(idF);
+        if (optionalFacultad.isPresent() && Objects.equals(optionalFacultad.get().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            return carreraRepository.findByFacultad(optionalFacultad.get());
         }
+        throw new RuntimeException("Facultad no encontrada o no pertenece al usuario");
+    }
 
+    // Crear carrera, asignada a una facultad del usuario
+    public Carrera createCarrera(Carrera newCarrera, Usuario usuario) {
+        Facultad facultad = newCarrera.getFacultad();
+        if (facultad == null || !Objects.equals(facultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            throw new RuntimeException("Facultad no válida o no pertenece al usuario");
+        }
         // Validar que el nombre no se repita en la misma facultad
         if (carreraRepository.existsByNombreCAndFacultad(newCarrera.getNombreC(), newCarrera.getFacultad())) {
             throw new RuntimeException("Ya existe una carrera con el nombre '" + newCarrera.getNombreC() +
                     "' en la facultad ID: " + newCarrera.getFacultad().getId_F());
         }
-
-        Carrera savedCarrera = carreraRepository.save(newCarrera);
-        if (savedCarrera == null) {
-            throw new RuntimeException("No se pudo crear la nueva carrera");
-        } else {
-            return savedCarrera;
-        }
+        return carreraRepository.save(newCarrera);
     }
 
     // import a whole DTO containing a Carrera, facultad, Universidad and a list of
@@ -130,45 +124,31 @@ public class CarreraService {
         return result;
     }
 
-    // Actualizar una carrera existente
-    public Carrera updateCarrera(int id, Carrera updatedCarrera) {
-        Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
-        if (optionalCarrera.isPresent()) {
-            Carrera existingCarrera = optionalCarrera.get();
-            updatedCarrera.setId_C(id); // Settear el identificador al valor correcto
-            Field[] fields = Carrera.class.getDeclaredFields(); // Obtener todos los campos de la clase Carrera
-            for (Field field : fields) {
-                try {
-                    field.setAccessible(true); // Permitir acceso a campos privados
-                    Object newValue = field.get(updatedCarrera); // Obtener el valor del campo correspondiente en
-                                                                 // updatedCarrera
-                    field.set(existingCarrera, newValue);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace(); // Manejar posibles excepciones
-                }
-            }
-            return carreraRepository.save(existingCarrera);
-
-        } else {
-            throw new RuntimeException("No se encontró la carrera con ID: " + id);
+    // Actualizar carrera, solo si pertenece al usuario
+    public Carrera updateCarrera(int id, Carrera updatedCarrera, Usuario usuario) {
+        Carrera existing = getCarreraById(id, usuario);
+        existing.setNombreC(updatedCarrera.getNombreC());
+        existing.setFechaInscripcion(updatedCarrera.getFechaInscripcion());
+        existing.setDuracion(updatedCarrera.getDuracion());
+        existing.setPlan(updatedCarrera.getPlan());
+        existing.setTituloIntermedio(updatedCarrera.getTituloIntermedio());
+        existing.setFacultad(updatedCarrera.getFacultad());  // Validar que la nueva facultad pertenezca al usuario
+        if (updatedCarrera.getFacultad() != null && 
+            !Objects.equals(updatedCarrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            throw new RuntimeException("Nueva facultad no pertenece al usuario");
         }
+        return carreraRepository.save(existing);
     }
 
-    // Eliminar una carrera existente
+    // Eliminar carrera, solo si pertenece al usuario
     @Transactional
-    public void deleteCarrera(int id) {
-        Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
-        if (optionalCarrera.isPresent()) {
-
-            Carrera carrera = optionalCarrera.get();
-            List<Materia> materias = materiaRepository.findByCarrera(carrera);
-
-            for (Materia materia : materias) {
-                materiaRepository.deleteById(materia.getIdMateria());
-            }
-            carreraRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("No se encontró la carrera con ID: " + id);
+    public void deleteCarrera(int id, Usuario usuario) {
+        Carrera carrera = getCarreraById(id, usuario);
+        // Lógica de eliminación en cascada
+        List<Materia> materias = materiaRepository.findByCarrera(carrera);
+        for (Materia materia : materias) {
+            materiaRepository.deleteById(materia.getIdMateria());
         }
+        carreraRepository.deleteById(id);
     }
 }

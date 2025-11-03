@@ -18,6 +18,8 @@ public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 
     List<Materia> findByCarrera(Carrera carrera);
 
+    List<Materia> findByCarreraIn(List<Carrera> carreras);  // Nuevo para filtrar por múltiples carreras
+
     @Query(value = "SELECT * FROM Materias WHERE Corresponden_Id_C = :idC AND (Estado = 'Aprobado' OR Estado = 'Promocionado')", nativeQuery = true)
     List<Materia> getApprovedByCarrera(@Param("idC") int idC);
 
