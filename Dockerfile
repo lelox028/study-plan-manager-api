@@ -13,5 +13,5 @@ RUN ./mvnw clean package -DskipTests
 # Exponer un puerto (opcional, Spring Boot usará ${PORT})
 EXPOSE 8080
 
-# Comando para iniciar la app
-CMD ["java", "-jar", "target/*.jar"]
+# Comando para iniciar la app (especifica el JAR exacto para evitar problemas con wildcard)
+CMD ["java", "-jar", "target/StudyPlanManagerApi-0.0.1-SNAPSHOT.jar"]
