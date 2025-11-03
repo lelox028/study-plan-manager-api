@@ -19,6 +19,8 @@ import com.lelox028.StudyPlanManagerApi.Repositories.CarreraRepository;
 import com.lelox028.StudyPlanManagerApi.Repositories.FacultadRepository;
 import com.lelox028.StudyPlanManagerApi.Repositories.UniversidadRepository;
 
+import java.util.Objects;  // Agregado
+
 @Service
 public class MateriaService {
 
@@ -46,9 +48,9 @@ public class MateriaService {
     public Materia getMateriaById(int id, Usuario usuario) {
         Optional<Materia> optionalMateria = materiaRepository.findById(id);
         if (optionalMateria.isPresent()) {
-            Carrera carrera = optionalMateria.get().getCarrera();
-            if (carrera.getFacultad().getUniversidad().getUsuario().equals(usuario)) {
-                return optionalMateria.get();
+            Materia materia = optionalMateria.get();
+            if (Objects.equals(materia.getCarrera().getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+                return materia;
             }
         }
         throw new RuntimeException("Materia no encontrada o no pertenece al usuario");
@@ -57,7 +59,7 @@ public class MateriaService {
     // Obtener materias por carrera ID, solo si la carrera pertenece al usuario
     public List<Materia> getMateriasByCarreraId(int idC, Usuario usuario) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(idC);
-        if (optionalCarrera.isPresent() && optionalCarrera.get().getFacultad().getUniversidad().getUsuario().equals(usuario)) {
+        if (optionalCarrera.isPresent() && Objects.equals(optionalCarrera.get().getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             Carrera carrera = optionalCarrera.get();
             return materiaRepository.findByCarrera(carrera);
         }
@@ -67,7 +69,7 @@ public class MateriaService {
     // Get Approved by Carrera, solo si pertenece al usuario
     public List<Materia> getApprovedByCarreraId(int idC, Usuario usuario) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(idC);
-        if (optionalCarrera.isPresent() && optionalCarrera.get().getFacultad().getUniversidad().getUsuario().equals(usuario)) {
+        if (optionalCarrera.isPresent() && Objects.equals(optionalCarrera.get().getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             return materiaRepository.getApprovedByCarrera(idC);
         }
         throw new RuntimeException("Carrera no encontrada o no pertenece al usuario");
@@ -77,7 +79,7 @@ public class MateriaService {
     public Materia createMateria(Materia newMateria, Usuario usuario) {
         // Validar que la Carrera exista y pertenezca al usuario
         Optional<Carrera> optionalCarrera = carreraRepository.findById(newMateria.getCarrera().getId_C());
-        if (!optionalCarrera.isPresent() || !optionalCarrera.get().getFacultad().getUniversidad().getUsuario().equals(usuario)) {
+        if (!optionalCarrera.isPresent() || !Objects.equals(optionalCarrera.get().getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             throw new RuntimeException("Carrera no encontrada o no pertenece al usuario");
         }
 
@@ -106,7 +108,7 @@ public class MateriaService {
         for (Materia materia : materias) {
             // Validar carrera para cada materia
             Optional<Carrera> optionalCarrera = carreraRepository.findById(materia.getCarrera().getId_C());
-            if (!optionalCarrera.isPresent() || !optionalCarrera.get().getFacultad().getUniversidad().getUsuario().equals(usuario)) {
+            if (!optionalCarrera.isPresent() || !Objects.equals(optionalCarrera.get().getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
                 throw new RuntimeException("Carrera de materia no pertenece al usuario");
             }
             // Lógica existente
@@ -119,7 +121,7 @@ public class MateriaService {
     // Overload para batch con carrera específica (validar carrera)
     @Transactional
     public List<Materia> saveAllMaterias(List<Materia> materias, Carrera carrera, Usuario usuario) {
-        if (!carrera.getFacultad().getUniversidad().getUsuario().equals(usuario)) {
+        if (!Objects.equals(carrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             throw new RuntimeException("Carrera no pertenece al usuario");
         }
         // Lógica existente intacta
@@ -156,6 +158,6 @@ public class MateriaService {
     // Eliminar materia, solo si pertenece al usuario
     public void deleteMateria(int id, Usuario usuario) {
         Materia materia = getMateriaById(id, usuario);  // Valida propiedad
-        materiaRepository.deleteById(materia.getIdMateria());
+        materiaRepository.deleteById(id);
     }
 }

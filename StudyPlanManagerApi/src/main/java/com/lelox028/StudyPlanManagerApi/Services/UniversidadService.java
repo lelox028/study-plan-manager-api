@@ -34,6 +34,9 @@ public class UniversidadService {
 
   // Obtener todas las universidades del usuario
   public List<Universidad> getAllUniversidades(Usuario usuario) {
+    System.out.println("Usuario: " + usuario.getUsername() + ", ID: " + usuario.getIdUsuarios());
+    List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
+    System.out.println("Universidades encontradas: " + universidades.size());
     return universidadRepository.findByUsuario(usuario);
   }
 

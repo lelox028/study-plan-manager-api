@@ -3,6 +3,7 @@ package com.lelox028.StudyPlanManagerApi.Models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;  // Agrega este import
 
 @Entity
 @Table(name = "Universidades")
@@ -19,6 +20,7 @@ public class Universidad {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Usuarios_idUsuarios", nullable = false)
+    @JsonIgnore  // Evita serializar el usuario en JSON
     private Usuario usuario;
 
     // Getters y Setters

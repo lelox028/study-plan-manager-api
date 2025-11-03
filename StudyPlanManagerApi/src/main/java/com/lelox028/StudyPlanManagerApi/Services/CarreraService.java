@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Objects;  // Agregado
 
 @Service
 public class CarreraService {
@@ -48,9 +49,9 @@ public class CarreraService {
     public Carrera getCarreraById(int id, Usuario usuario) {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
         if (optionalCarrera.isPresent()) {
-            Facultad facultad = optionalCarrera.get().getFacultad();
-            if (facultad.getUniversidad().getUsuario().equals(usuario)) {
-                return optionalCarrera.get();
+            Carrera carrera = optionalCarrera.get();
+            if (Objects.equals(carrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+                return carrera;
             }
         }
         throw new RuntimeException("Carrera no encontrada o no pertenece al usuario");
@@ -59,7 +60,7 @@ public class CarreraService {
     // Obtener carreras por facultad ID, solo si la facultad pertenece al usuario
     public List<Carrera> getCarrerasByFacultadId(int idF, Usuario usuario) {
         Optional<Facultad> optionalFacultad = facultadRepository.findById(idF);
-        if (optionalFacultad.isPresent() && optionalFacultad.get().getUniversidad().getUsuario().equals(usuario)) {
+        if (optionalFacultad.isPresent() && Objects.equals(optionalFacultad.get().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             return carreraRepository.findByFacultad(optionalFacultad.get());
         }
         throw new RuntimeException("Facultad no encontrada o no pertenece al usuario");
@@ -68,7 +69,7 @@ public class CarreraService {
     // Crear carrera, asignada a una facultad del usuario
     public Carrera createCarrera(Carrera newCarrera, Usuario usuario) {
         Facultad facultad = newCarrera.getFacultad();
-        if (facultad == null || !facultad.getUniversidad().getUsuario().equals(usuario)) {
+        if (facultad == null || !Objects.equals(facultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             throw new RuntimeException("Facultad no válida o no pertenece al usuario");
         }
         // Validar que el nombre no se repita en la misma facultad
@@ -132,6 +133,10 @@ public class CarreraService {
         existing.setPlan(updatedCarrera.getPlan());
         existing.setTituloIntermedio(updatedCarrera.getTituloIntermedio());
         existing.setFacultad(updatedCarrera.getFacultad());  // Validar que la nueva facultad pertenezca al usuario
+        if (updatedCarrera.getFacultad() != null && 
+            !Objects.equals(updatedCarrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            throw new RuntimeException("Nueva facultad no pertenece al usuario");
+        }
         return carreraRepository.save(existing);
     }
 

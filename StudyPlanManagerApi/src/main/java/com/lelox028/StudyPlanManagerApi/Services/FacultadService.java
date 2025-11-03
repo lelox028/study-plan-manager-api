@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Objects;  // Agrega si no está
 
 @Service
 public class FacultadService {
@@ -30,9 +31,10 @@ public class FacultadService {
     public Facultad getFacultadById(int id, Usuario usuario) {
         Optional<Facultad> optionalFacultad = facultadRepository.findById(id);
         if (optionalFacultad.isPresent()) {
-            Universidad universidad = optionalFacultad.get().getUniversidad();
-            if (universidad.getUsuario().equals(usuario)) {
-                return optionalFacultad.get();
+            Facultad facultad = optionalFacultad.get();
+            Universidad universidad = facultad.getUniversidad();
+            if (Objects.equals(universidad.getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+                return facultad;
             }
         }
         throw new RuntimeException("Facultad no encontrada o no pertenece al usuario");
@@ -41,8 +43,12 @@ public class FacultadService {
     // Obtener facultades por universidad ID, solo si la universidad pertenece al usuario
     public List<Facultad> getFacultadesbyUniversidadId(int idU, Usuario usuario) {
         Optional<Universidad> optionalUniversidad = universidadRepository.findById(idU);
-        if (optionalUniversidad.isPresent() && optionalUniversidad.get().getUsuario().equals(usuario)) {
-            return facultadRepository.findByUniversidad(optionalUniversidad.get());
+        if (optionalUniversidad.isPresent()) {
+            Universidad universidad = optionalUniversidad.get();
+            // Compara por ID en lugar de equals()
+            if (Objects.equals(universidad.getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+                return facultadRepository.findByUniversidad(universidad);
+            }
         }
         throw new RuntimeException("Universidad no encontrada o no pertenece al usuario");
     }
@@ -50,7 +56,7 @@ public class FacultadService {
     // Crear facultad, asignada a una universidad del usuario
     public Facultad createFacultad(Facultad newFacultad, Usuario usuario) {
         Universidad universidad = newFacultad.getUniversidad();
-        if (universidad == null || !universidad.getUsuario().equals(usuario)) {
+        if (universidad == null || !Objects.equals(universidad.getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             throw new RuntimeException("Universidad no válida o no pertenece al usuario");
         }
         return facultadRepository.save(newFacultad);
@@ -60,7 +66,12 @@ public class FacultadService {
     public Facultad updateFacultad(int id, Facultad updatedFacultad, Usuario usuario) {
         Facultad existing = getFacultadById(id, usuario);
         existing.setNombreF(updatedFacultad.getNombreF());
-        existing.setUniversidad(updatedFacultad.getUniversidad());  // Validar que la nueva universidad pertenezca al usuario
+        existing.setUniversidad(updatedFacultad.getUniversidad());
+        // Valida que la nueva universidad pertenezca al usuario
+        if (updatedFacultad.getUniversidad() != null && 
+            !Objects.equals(updatedFacultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            throw new RuntimeException("Nueva universidad no pertenece al usuario");
+        }
         return facultadRepository.save(existing);
     }
 
