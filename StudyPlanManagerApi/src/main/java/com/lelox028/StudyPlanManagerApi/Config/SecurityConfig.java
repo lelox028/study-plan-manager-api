@@ -53,7 +53,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://study-plan-manager-frontend-react-2id2sbxn1-lelox028s-projects.vercel.app"));
+                "https://study-plan-manager-frontend-react.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Tus métodos
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "*")); // Headers, incluyendo
                                                                                         // Authorization
