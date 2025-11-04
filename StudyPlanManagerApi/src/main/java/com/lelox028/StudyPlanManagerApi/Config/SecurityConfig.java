@@ -51,9 +51,10 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
-                "http://localhost:3000",
-                "https://study-plan-manager-frontend-react.vercel.app"));
+       configuration.setAllowedOriginPatterns(List.of(
+        "http://localhost:3000",
+        "https://study-plan-manager-frontend-react*.vercel.app"
+    ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Tus métodos
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "*")); // Headers, incluyendo
                                                                                         // Authorization
