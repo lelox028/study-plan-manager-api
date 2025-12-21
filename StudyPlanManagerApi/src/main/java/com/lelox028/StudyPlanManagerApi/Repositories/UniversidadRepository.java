@@ -12,6 +12,7 @@ import com.lelox028.StudyPlanManagerApi.Models.Usuario;
 @Repository
 public interface UniversidadRepository extends JpaRepository<Universidad, Integer> {
     boolean existsByNombreU(String nombreU);
+    boolean existsByNombreUAndUsuario(String nombreU, Usuario usuario);
 
     Optional<Universidad> findByNombreU(String nombreU);
 

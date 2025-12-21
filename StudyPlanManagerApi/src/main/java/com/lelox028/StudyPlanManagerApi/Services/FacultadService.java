@@ -55,10 +55,14 @@ public class FacultadService {
 
     // Crear facultad, asignada a una universidad del usuario
     public Facultad createFacultad(Facultad newFacultad, Usuario usuario) {
-        Universidad universidad = newFacultad.getUniversidad();
-        if (universidad == null || !Objects.equals(universidad.getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+
+        // Obtener la universidad según su id y validar que pertenezca al usuario
+        Optional<Universidad> optionalUniversidad = universidadRepository.findById(newFacultad.getUniversidad().getId_Universidad());
+        newFacultad.setUniversidad(optionalUniversidad.orElse(null));
+        if (newFacultad.getUniversidad() == null || !Objects.equals(newFacultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             throw new RuntimeException("Universidad no válida o no pertenece al usuario");
         }
+        // newFacultad.getUniversidad().setUsuario(usuario);
         return facultadRepository.save(newFacultad);
     }
 

@@ -36,8 +36,7 @@ public class UniversidadService {
   public List<Universidad> getAllUniversidades(Usuario usuario) {
     System.out.println("Usuario: " + usuario.getUsername() + ", ID: " + usuario.getIdUsuarios());
     List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
-    System.out.println("Universidades encontradas: " + universidades.size());
-    return universidadRepository.findByUsuario(usuario);
+    return universidades;
   }
 
   // Obtener universidad por ID, solo si pertenece al usuario
@@ -52,9 +51,9 @@ public class UniversidadService {
 
   public Universidad createUniversidad(Universidad newUniversidad, Usuario usuario) {
     newUniversidad.setUsuario(usuario);
-    newUniversidad.setId_Universidad(0);
-    if (universidadRepository.existsByNombreU(newUniversidad.getNombre_Universidad())) {
-      throw new RuntimeException("Ya existe una universidad con el nombre: " + newUniversidad.getNombre_Universidad());
+    //newUniversidad.setId_Universidad(0);
+    if (universidadRepository.existsByNombreUAndUsuario(newUniversidad.getNombre_Universidad(), usuario)) {
+      throw new RuntimeException("El usuario actual ya tiene una universidad con el nombre: " + newUniversidad.getNombre_Universidad());
     }
     Universidad savedUniversidad = universidadRepository.save(newUniversidad);
     if (savedUniversidad == null) {

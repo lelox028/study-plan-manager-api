@@ -69,8 +69,12 @@ public class CarreraService {
     // Crear carrera, asignada a una facultad del usuario
     public Carrera createCarrera(Carrera newCarrera, Usuario usuario) {
         Facultad facultad = newCarrera.getFacultad();
-        if (facultad == null || !Objects.equals(facultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
-            throw new RuntimeException("Facultad no válida o no pertenece al usuario");
+
+        // Obtener la universidad según su id y validar que pertenezca al usuario
+        Optional<Universidad> optionalUniversidad = universidadRepository.findById(facultad.getUniversidad().getId_Universidad());
+        facultad.setUniversidad(optionalUniversidad.orElse(null));
+        if (facultad == null || facultad.getUniversidad() == null || !Objects.equals(facultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            throw new RuntimeException("Universidad o Facultad no válidas");
         }
         // Validar que el nombre no se repita en la misma facultad
         if (carreraRepository.existsByNombreCAndFacultad(newCarrera.getNombreC(), newCarrera.getFacultad())) {
