@@ -83,4 +83,9 @@ public class Usuario implements UserDetails {
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return activo; }
+
+    @Override
+    public String toString() {
+        return "Usuario [idUsuarios=" + idUsuarios + ", username=" + username + ", email=" + email + ", rol=" + rol + "]";
+    }
 }

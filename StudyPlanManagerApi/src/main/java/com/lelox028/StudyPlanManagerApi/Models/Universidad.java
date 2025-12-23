@@ -50,6 +50,6 @@ public class Universidad {
 
     @Override
     public String toString() {
-        return "Universidad [id= " + id_U + ", nombre=" + nombreU + "]";
+        return "Universidad [id= " + id_U + ", nombre=" + nombreU + " Usuario=" + usuario.toString() + "]";
     }
 }
