@@ -42,7 +42,11 @@ public class UniversidadService {
   // Obtener universidad por ID, solo si pertenece al usuario
   public Universidad getUniversidadById(int id, Usuario usuario) {
     Optional<Universidad> optionalUniversidad = universidadRepository.findById(id);
-    if (optionalUniversidad.isPresent() && optionalUniversidad.get().getUsuario().equals(usuario)) {
+    if(!optionalUniversidad.isPresent()){
+      throw new RuntimeException("Universidad no encontrada");
+    }
+    int idCurrentUser = optionalUniversidad.get().getUsuario().getIdUsuarios();
+    if (idCurrentUser == usuario.getIdUsuarios()) {
       return optionalUniversidad.get();
     } else {
       throw new RuntimeException("Universidad no encontrada o no pertenece al usuario");
