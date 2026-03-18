@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lelox028.StudyPlanManagerApi.DTOs.FacultadCarrerasDTO;
+import com.lelox028.StudyPlanManagerApi.DTOs.UniversidadFacultadesDTO;
 import com.lelox028.StudyPlanManagerApi.Models.Carrera;
 import com.lelox028.StudyPlanManagerApi.Models.Facultad;
 import com.lelox028.StudyPlanManagerApi.Models.Materia;
@@ -34,9 +36,23 @@ public class UniversidadService {
 
   // Obtener todas las universidades del usuario
   public List<Universidad> getAllUniversidades(Usuario usuario) {
-    System.out.println("Usuario: " + usuario.getUsername() + ", ID: " + usuario.getIdUsuarios());
+    // System.out.println("Usuario: " + usuario.getUsername() + ", ID: " + usuario.getIdUsuarios());
     List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
     return universidades;
+  }
+
+  // Obtener todas las universidades del usuario
+  public List<UniversidadFacultadesDTO> getAllUniversidadesPopulateDtos(Usuario usuario) {
+    List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
+    List<UniversidadFacultadesDTO> result = universidades.stream().map(universidad -> {
+      List<Facultad> facultades = facultadRepository.findByUniversidad(universidad);
+      List<FacultadCarrerasDTO> facultadCarrerasDtos = facultades.stream().map(facultad -> {
+        List<Carrera> carreras = carreraRepository.findByFacultad(facultad);
+        return new FacultadCarrerasDTO(facultad, carreras);
+      }).toList();
+      return new UniversidadFacultadesDTO(universidad, facultadCarrerasDtos);
+    }).toList();
+    return result;
   }
 
   // Obtener universidad por ID, solo si pertenece al usuario

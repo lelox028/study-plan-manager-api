@@ -1,5 +1,6 @@
 package com.lelox028.StudyPlanManagerApi.Controllers;
 
+import com.lelox028.StudyPlanManagerApi.DTOs.UniversidadFacultadesDTO;
 import com.lelox028.StudyPlanManagerApi.Models.Universidad;
 import com.lelox028.StudyPlanManagerApi.Models.Usuario;
 import com.lelox028.StudyPlanManagerApi.Services.UniversidadService;
@@ -25,9 +26,9 @@ public class UniversidadController {
     }
 
     @GetMapping
-    public List<Universidad> getUniversidades() {
+    public List<UniversidadFacultadesDTO> getUniversidades() {
         Usuario usuario = getAuthenticatedUser();
-        return universidadService.getAllUniversidades(usuario);
+        return universidadService.getAllUniversidadesPopulateDtos(usuario);
     }
 
     @GetMapping("/{id}")
