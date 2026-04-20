@@ -1,6 +1,5 @@
 package com.lelox028.StudyPlanManagerApi.Services;
 
-
 import com.lelox028.StudyPlanManagerApi.DTOs.CarreraMateriasDTO;
 import com.lelox028.StudyPlanManagerApi.Models.Carrera;
 import com.lelox028.StudyPlanManagerApi.Models.Facultad;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.Objects;  // Agregado
+import java.util.Objects; // Agregado
 
 @Service
 public class CarreraService {
@@ -38,7 +37,8 @@ public class CarreraService {
     @Autowired
     private MateriaRepository materiaRepository;
 
-    // Obtener todas las carreras del usuario (a través de sus universidades/facultades)
+    // Obtener todas las carreras del usuario (a través de sus
+    // universidades/facultades)
     public List<Carrera> getAllCarreras(Usuario usuario) {
         List<Universidad> universidades = universidadRepository.findByUsuario(usuario);
         List<Facultad> facultades = facultadRepository.findByUniversidadIn(universidades);
@@ -50,7 +50,8 @@ public class CarreraService {
         Optional<Carrera> optionalCarrera = carreraRepository.findById(id);
         if (optionalCarrera.isPresent()) {
             Carrera carrera = optionalCarrera.get();
-            if (Objects.equals(carrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+            if (Objects.equals(carrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(),
+                    usuario.getIdUsuarios())) {
                 return carrera;
             }
         }
@@ -60,7 +61,8 @@ public class CarreraService {
     // Obtener carreras por facultad ID, solo si la facultad pertenece al usuario
     public List<Carrera> getCarrerasByFacultadId(int idF, Usuario usuario) {
         Optional<Facultad> optionalFacultad = facultadRepository.findById(idF);
-        if (optionalFacultad.isPresent() && Objects.equals(optionalFacultad.get().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+        if (optionalFacultad.isPresent() && Objects.equals(
+                optionalFacultad.get().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             return carreraRepository.findByFacultad(optionalFacultad.get());
         }
         throw new RuntimeException("Facultad no encontrada o no pertenece al usuario");
@@ -71,9 +73,11 @@ public class CarreraService {
         Facultad facultad = newCarrera.getFacultad();
 
         // Obtener la universidad según su id y validar que pertenezca al usuario
-        Optional<Universidad> optionalUniversidad = universidadRepository.findById(facultad.getUniversidad().getId_Universidad());
+        Optional<Universidad> optionalUniversidad = universidadRepository
+                .findById(facultad.getUniversidad().getId_Universidad());
         facultad.setUniversidad(optionalUniversidad.orElse(null));
-        if (facultad == null || facultad.getUniversidad() == null || !Objects.equals(facultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+        if (facultad == null || facultad.getUniversidad() == null
+                || !Objects.equals(facultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
             throw new RuntimeException("Universidad o Facultad no válidas");
         }
         // Validar que el nombre no se repita en la misma facultad
@@ -131,14 +135,19 @@ public class CarreraService {
     // Actualizar carrera, solo si pertenece al usuario
     public Carrera updateCarrera(int id, Carrera updatedCarrera, Usuario usuario) {
         Carrera existing = getCarreraById(id, usuario);
-        existing.setNombreC(updatedCarrera.getNombreC());
-        existing.setFechaInscripcion(updatedCarrera.getFechaInscripcion());
+        existing.setNombreC(updatedCarrera.getNombreC() != null ? updatedCarrera.getNombreC() : existing.getNombreC());
+        existing.setFechaInscripcion(updatedCarrera.getFechaInscripcion() != null ? updatedCarrera.getFechaInscripcion()
+                : existing.getFechaInscripcion());
         existing.setDuracion(updatedCarrera.getDuracion());
-        existing.setPlan(updatedCarrera.getPlan());
-        existing.setTituloIntermedio(updatedCarrera.getTituloIntermedio());
-        existing.setFacultad(updatedCarrera.getFacultad());  // Validar que la nueva facultad pertenezca al usuario
-        if (updatedCarrera.getFacultad() != null && 
-            !Objects.equals(updatedCarrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
+        existing.setPlan(updatedCarrera.getPlan() != null ? updatedCarrera.getPlan() : existing.getPlan());
+        existing.setTituloIntermedio(updatedCarrera.getTituloIntermedio() != null ? updatedCarrera.getTituloIntermedio()
+                : existing.getTituloIntermedio());
+        existing.setFacultad(
+                (updatedCarrera.getFacultad() != null) ? updatedCarrera.getFacultad() : existing.getFacultad());
+        // Validar que la nueva facultad pertenezca al usuario
+        if (updatedCarrera.getFacultad() != null &&
+                !Objects.equals(updatedCarrera.getFacultad().getUniversidad().getUsuario().getIdUsuarios(),
+                        usuario.getIdUsuarios())) {
             throw new RuntimeException("Nueva facultad no pertenece al usuario");
         }
         return carreraRepository.save(existing);

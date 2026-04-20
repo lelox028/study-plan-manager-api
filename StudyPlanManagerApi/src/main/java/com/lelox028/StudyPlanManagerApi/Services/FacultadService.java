@@ -69,8 +69,8 @@ public class FacultadService {
     // Actualizar facultad, solo si pertenece al usuario
     public Facultad updateFacultad(int id, Facultad updatedFacultad, Usuario usuario) {
         Facultad existing = getFacultadById(id, usuario);
-        existing.setNombreF(updatedFacultad.getNombreF());
-        existing.setUniversidad(updatedFacultad.getUniversidad());
+        existing.setNombreF(updatedFacultad.getNombreF()!= null ? updatedFacultad.getNombreF() : existing.getNombreF());
+        existing.setUniversidad(updatedFacultad.getUniversidad()!= null ? updatedFacultad.getUniversidad() : existing.getUniversidad());
         // Valida que la nueva universidad pertenezca al usuario
         if (updatedFacultad.getUniversidad() != null && 
             !Objects.equals(updatedFacultad.getUniversidad().getUsuario().getIdUsuarios(), usuario.getIdUsuarios())) {
